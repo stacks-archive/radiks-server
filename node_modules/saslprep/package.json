@@ -1,0 +1,34 @@
+{
+  "name": "saslprep",
+  "version": "1.0.1",
+  "description": "SASLprep: Stringprep Profile for User Names and Passwords, rfc4013.",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reklatsmasters/saslprep.git"
+  },
+  "keywords": [
+    "sasl",
+    "saslprep",
+    "stringprep",
+    "rfc4013",
+    "4013"
+  ],
+  "author": "Dmitry Tsvettsikh <me@reklatsmasters.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/reklatsmasters/saslprep/issues"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "homepage": "https://github.com/reklatsmasters/saslprep#readme",
+  "devDependencies": {
+    "ava": "^0.19.1",
+    "eslint-plugin-prettier": "^2.1.2",
+    "prettier": "^1.4.4"
+  }
+}
