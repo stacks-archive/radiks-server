@@ -27,7 +27,7 @@ const model = yargs
       attributes: attrs,
     };
     console.log(json);
-    await fs.outputJson(`./models/${name}.json`, json, { spaces: 2 });
+    await fs.outputJson(`./schemas/${name}.json`, json, { spaces: 2 });
     console.log('done');
   })
   .help()
