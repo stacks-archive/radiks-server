@@ -10,6 +10,17 @@ class Signer {
   }
 
   save(db) {
+    // return new Promise(async (resolve) => {
+    //   const { _id, privateKey, publicKey } = this;
+    //   await db.insertOne({
+    //     _id,
+    //     privateKey,
+    //     publicKey,
+    //   });
+    //   setTimeout(() => {
+    //     resolve();
+    //   }, 1000);
+    // });
     const { _id, privateKey, publicKey } = this;
     return db.insertOne({
       _id,

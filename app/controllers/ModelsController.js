@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const request = require('request-promise');
 const queryToMongo = require('query-to-mongo');
 
+const Validator = require('../lib/validator');
+
 const makeModelsController = (db) => {
   const ModelsController = express.Router();
   ModelsController.use(bodyParser.json());
@@ -14,12 +16,21 @@ const makeModelsController = (db) => {
       uri: gaiaURL,
       json: true,
     });
-    await db.insertOne(attrs);
-    // console.log(doc);
+    const validator = new Validator(db, attrs);
+    try {
+      validator.validate();
+      await db.insertOne(attrs);
+      // console.log(doc);
 
-    res.json({
-      success: true,
-    });
+      res.json({
+        success: true,
+      });
+    } catch (error) {
+      res.json({
+        success: false,
+        message: error.message,
+      });
+    }
   });
 
   ModelsController.get('/find', async (req, res) => {

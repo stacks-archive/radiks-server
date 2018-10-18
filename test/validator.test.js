@@ -1,8 +1,9 @@
 require('./setup');
 const { models } = require('./mocks');
 const getDB = require('./db');
-const Validator = require('../app/lib/validator');
 const Signer = require('./signer');
+
+const Validator = require.requireActual('../app/lib/validator');
 
 test('it validates new models', async () => {
   const signer = new Signer();
