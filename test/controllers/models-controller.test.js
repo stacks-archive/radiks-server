@@ -11,7 +11,7 @@ test('it can crawl a gaia url', async () => {
   let response = await request(app).post('/radiks/models/crawl').send({ gaiaURL: 'test1' });
   expect(response.body.success).toEqual(true);
 
-  response = await request(app).get(`/radiks/models/${model.id}`);
+  response = await request(app).get(`/radiks/models/${model._id}`);
   expect(response.body.name).toEqual(model.name);
 });
 

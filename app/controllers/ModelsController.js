@@ -14,9 +14,6 @@ const makeModelsController = (db) => {
       uri: gaiaURL,
       json: true,
     });
-    // console.log(attrs);
-    attrs._id = attrs.id;
-    // const doc = await db.put(attrs);
     await db.insertOne(attrs);
     // console.log(doc);
 
