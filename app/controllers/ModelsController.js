@@ -1,41 +1,53 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const BlockstackUser = require('../models/blockstack-user');
+const request = require('request-promise');
+const queryToMongo = require('query-to-mongo');
 
-const makeModelsController = (models) => {
+const makeModelsController = (db) => {
   const ModelsController = express.Router();
   ModelsController.use(bodyParser.json());
 
-  Object.keys(models).forEach((modelName) => {
-    const Model = models[modelName];
-    ModelsController.get(`/${modelName}/schema`, (req, res) => {
-      res.json(Model.schema.obj);
+  ModelsController.post('/crawl', async (req, res) => {
+    const { gaiaURL } = req.body;
+    // console.log(gaiaURL);
+    const attrs = await request({
+      uri: gaiaURL,
+      json: true,
+    });
+    // console.log(attrs);
+    attrs._id = attrs.id;
+    // const doc = await db.put(attrs);
+    await db.insertOne(attrs);
+    // console.log(doc);
+
+    res.json({
+      success: true,
+    });
+  });
+
+  ModelsController.get('/find', async (req, res) => {
+    const mongo = queryToMongo(req.query, {
+      maxLimit: 1000,
     });
 
-    ModelsController.post(`/${modelName}`, async (req, res) => {
-      const { attributes, username } = req.body;
-      console.log(req.body);
-      const user = await BlockstackUser.findOrCreateByUsername(username);
-      const model = new Model({
-        createdBy: user._id,
-        ...attributes,
-      });
-      // console.log(model, user);
-      await model.save();
-      console.log(model.createdBy, user._id);
-      res.json(model);
-    });
+    const cursor = db.find(mongo.criteria, mongo.options);
+    const results = await cursor.toArray();
+    const total = await cursor.count();
 
-    ModelsController.get(`/${modelName}`, async (req, res) => {
-      const results = await Model.find().populate('createdBy').exec();
-      console.log(results);
-      res.json({ models: results });
-    });
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    const pageLinks = mongo.links(fullUrl.split('?')[0], total);
 
-    ModelsController.get(`/${modelName}/:id`, async (req, res) => {
-      const model = await Model.findOne({ uuid: req.params.id }).populate('createdBy').exec();
-      res.json(model);
+    res.json({
+      ...pageLinks,
+      total,
+      results,
     });
+  });
+
+  ModelsController.get('/:id', async (req, res) => {
+    const { id } = req.params;
+    const doc = await db.findOne({ _id: id });
+    res.json(doc);
   });
 
   return ModelsController;

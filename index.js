@@ -1,10 +1,12 @@
 const makeModelsController = require('./app/controllers/ModelsController');
 const setupController = require('./app/controllers/RadiksController');
 const fetchModels = require('./app/models');
-const { setupDB, getDB } = require('./couchdb/setup');
+// const { getDB } = require('./couchdb');
+// const { setupDB } = require('./couchdb/setup');
+const { getDB } = require('./app/database/mongodb');
 
-const setup = (config) => {
-  const db = getDB(config);
+const setup = async (config) => {
+  const db = await getDB(config.mongoDBUrl);
   const controller = setupController(db);
   return controller;
 };
@@ -13,7 +15,7 @@ module.exports = {
   makeModelsController,
   fetchModels,
   setup,
-  setupDB,
+  // setupDB,
   getDB,
   setupController,
 };
