@@ -10,17 +10,6 @@ class Signer {
   }
 
   save(db) {
-    // return new Promise(async (resolve) => {
-    //   const { _id, privateKey, publicKey } = this;
-    //   await db.insertOne({
-    //     _id,
-    //     privateKey,
-    //     publicKey,
-    //   });
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 1000);
-    // });
     const { _id, privateKey, publicKey } = this;
     return db.insertOne({
       _id,
@@ -32,7 +21,7 @@ class Signer {
   sign(doc) {
     const now = new Date().getTime();
     doc.updatedAt = now;
-    doc.signingKeyId = this._id;
+    doc.signingKeyId = doc.signingKeyId || this._id;
     const message = `${doc._id}-${doc.updatedAt}`;
     const { signature } = signECDSA(this.privateKey, message);
     doc.signature = signature;

@@ -19,13 +19,13 @@ const makeModelsController = (db) => {
     const validator = new Validator(db, attrs);
     try {
       validator.validate();
-      await db.insertOne(attrs);
-      // console.log(doc);
+      await db.save(attrs);
 
       res.json({
         success: true,
       });
     } catch (error) {
+      console.error(error);
       res.json({
         success: false,
         message: error.message,

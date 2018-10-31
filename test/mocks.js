@@ -1,6 +1,8 @@
 const faker = require('faker');
 const getDB = require('./db');
 
+const userGroupId = faker.random.uuid();
+
 const models = {
   test1: {
     name: faker.name.findName(),
@@ -17,6 +19,18 @@ const models = {
     name: 'Myla',
     age: 4.5,
     _id: faker.random.uuid(),
+  },
+  notUpdatable: {
+    updatable: false,
+    _id: faker.random.uuid(),
+  },
+  userGroup: {
+    radiksType: 'UserGroup',
+    _id: userGroupId,
+  },
+  withGroup: {
+    _id: faker.random.uuid(),
+    userGroupId,
   },
 };
 

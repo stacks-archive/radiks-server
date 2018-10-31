@@ -12,8 +12,8 @@ class Validator {
 
   async validate() {
     this.validatePresent('_id');
-    await this.validateSignature();
     await this.fetchPrevious();
+    await this.validateSignature();
     await this.validatePrevious();
     return true;
   }
@@ -24,8 +24,9 @@ class Validator {
   }
 
   async validateSignature() {
+    const { signingKeyId } = this.attrs.userGroupId ? this.attrs : this.previous || this.attrs;
     const {
-      signature, signingKeyId, updatable, updatedAt, _id,
+      signature, updatable, updatedAt, _id,
     } = this.attrs;
     if (updatable === false) {
       return true;
@@ -33,6 +34,7 @@ class Validator {
     this.validatePresent('signature');
     this.validatePresent('signingKeyId');
     this.validatePresent('updatedAt');
+    await this.signingKeyMatchesGroup(signingKeyId);
     const signingKey = await this.db.findOne({ _id: signingKeyId });
     if (!signingKey) {
       errorMessage(`No signing key is present with id: '${signingKeyId}'`);
@@ -46,9 +48,19 @@ class Validator {
     return true;
   }
 
+  async signingKeyMatchesGroup() {
+    if (this.attrs.userGroupId) {
+      const userGroup = await this.db.findOne({ _id: this.attrs.userGroupId });
+      if (userGroup && userGroup.signingKeyId !== this.attrs.signingKeyId) {
+        errorMessage('Signing key does not match UserGroup signing key');
+      }
+    }
+    return true;
+  }
+
   async validatePrevious() {
-    if (this.previous && this.attrs.updatable) {
-      throw new Error('Tried to update a non-updatable model');
+    if (this.previous && (this.attrs.updatable === false)) {
+      errorMessage('Tried to update a non-updatable model');
     }
   }
 
@@ -56,10 +68,6 @@ class Validator {
     if (!this.attrs[key]) {
       errorMessage(`No '${key}' attribute, which is required.`);
     }
-  }
-
-  errorMessage(message) {
-    throw new Error(`Error when validating: ${message}`);
   }
 }
 

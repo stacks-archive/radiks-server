@@ -15,6 +15,14 @@ test('it can crawl a gaia url', async () => {
   expect(response.body.name).toEqual(model.name);
 });
 
+test('it can save the same model twice', async () => {
+  const app = await getApp();
+  let response = await request(app).post('/radiks/models/crawl').send({ gaiaURL: 'test1' });
+  expect(response.body.success).toEqual(true);
+  response = await request(app).post('/radiks/models/crawl').send({ gaiaURL: 'test1' });
+  expect(response.body.success).toEqual(true);
+});
+
 const getDocs = async (app, query) => {
   const req = request(app).get('/radiks/models/find').query(query);
   const response = await req;
