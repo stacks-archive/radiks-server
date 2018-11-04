@@ -5,7 +5,9 @@
   "main": "index.js",
   "author": "Hank Stoever",
   "license": "MIT",
-  "bin": {},
+  "bin": {
+    "radiks-server": "./bin/radiks-server.js"
+  },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
     "blockstack": "^18.0.4",
