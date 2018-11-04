@@ -2,11 +2,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request-promise');
 const queryToMongo = require('query-to-mongo');
+const { decorateApp } = require('@awaitjs/express');
 
 const Validator = require('../lib/validator');
 
 const makeModelsController = (db) => {
-  const ModelsController = express.Router();
+  const ModelsController = decorateApp(express.Router());
   ModelsController.use(bodyParser.json());
 
   ModelsController.post('/crawl', async (req, res) => {
@@ -33,7 +34,7 @@ const makeModelsController = (db) => {
     }
   });
 
-  ModelsController.get('/find', async (req, res) => {
+  ModelsController.getAsync('/find', async (req, res) => {
     const mongo = queryToMongo(req.query, {
       maxLimit: 1000,
     });
@@ -52,7 +53,7 @@ const makeModelsController = (db) => {
     });
   });
 
-  ModelsController.get('/:id', async (req, res) => {
+  ModelsController.getAsync('/:id', async (req, res) => {
     const { id } = req.params;
     const doc = await db.findOne({ _id: id });
     res.json(doc);
