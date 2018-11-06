@@ -12,7 +12,6 @@ const makeModelsController = (db) => {
 
   ModelsController.post('/crawl', async (req, res) => {
     const { gaiaURL } = req.body;
-    // console.log(gaiaURL);
     const attrs = await request({
       uri: gaiaURL,
       json: true,

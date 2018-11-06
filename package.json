@@ -8,6 +8,9 @@
   "bin": {
     "radiks-server": "./bin/radiks-server.js"
   },
+  "scripts": {
+    "eslint": "eslint ."
+  },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
     "blockstack": "^18.0.4",

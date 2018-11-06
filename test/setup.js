@@ -7,9 +7,8 @@ jest.mock('../app/lib/validator', () => class FakeValidator {
 });
 
 jest.mock('request-promise', () => (options) => {
-  const { models } = require('./mocks');
+  const { models } = require('./mocks'); // eslint-disable-line
   const { uri } = options;
-  // console.log(options);
   return Promise.resolve(models[uri]);
 });
 
@@ -17,6 +16,8 @@ beforeEach(async (done) => {
   const db = await getDB();
   try {
     await db.drop();
-  } catch (error) { }
+  } catch (error) {
+    // collection doesn't exist
+  }
   done();
 });
