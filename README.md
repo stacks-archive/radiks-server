@@ -12,6 +12,9 @@
   - [Built-in CLI Server](#built-in-cli-server)
   - [Specifying the MongoDB URL](#specifying-the-mongodb-url)
   - [Running a custom Radiks-server](#running-a-custom-radiks-server)
+  - [Accessing the MongoDB Collection](#accessing-the-mongodb-collection)
+    - [Using `getDB` to manually connecting to the MongoDB collection](#using-getdb-to-manually-connecting-to-the-mongodb-collection)
+    - [Migration from Firebase (or anywhere else)](#migration-from-firebase-or-anywhere-else)
 
 <!-- /TOC -->
 
@@ -95,7 +98,20 @@ setup({
 });
 ~~~
 
-### Migration from Firebase
+### Accessing the MongoDB Collection
+
+#### Using `getDB` to manually connecting to the MongoDB collection
+
+Radiks-server keeps all models inside of a collection. You can use the `getDB` function to access this collection. [See the MongoDB Collection reference](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html) for documentation about how you can interact with this collection.
+
+~~~js
+const { getDB } = require('radiks-server');
+
+const mongo = await getDB(MONGODB_URL);
+~~~
+
+#### Migration from Firebase (or anywhere else)
+
 Migrating data from Firebase to Radiks-server is simple and painless.  You can create a script file to fetch all the firebase data using their API.  Then, you can use your MONGOD_URI config to use the `mongodb` npm package.
 
 ```js
@@ -105,6 +121,8 @@ const { getDB } = require('radiks-server');
 const { mongoURI } = require('......') // How you import/require your mongoURI is up to you
 
 const migrate = async () => {
+  // `mongo` is a reference to the MongoDB collection that radiks-server uses.
+  // You can add or edit or update data as necessary.
   const mongo = await getDB(mongoURI);
 
   /**
