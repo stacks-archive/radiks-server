@@ -95,3 +95,62 @@ setup({
 });
 ~~~
 
+### Migration from Firebase
+Migrating data from Firebase to Radiks-server is simple and painless.  You can create a script file to fetch all the firebase data using their API.  Then, you can use your MONGOD_URI config to use the `mongodb` npm package.
+
+```js
+// Script for transfering users from Firebase to Radiks-server
+
+const { getDB } = require('radiks-server');
+const { mongoURI } = require('......') // How you import/require your mongoURI is up to you
+
+const migrate = async () => {
+  const mongo = await getDB(mongoURI);
+
+  /**
+   * Call code to get your users from firebase
+   * const users = await getUsersFromFirebase();
+   * OR grab the Firebase JSON file and set users to that value
+   * How you saved your user data will proably be different than the example below
+   */
+
+   const users = {
+     "-LV1HAQToANRvhysSClr": {
+       "blockstackId": "1N1DzKgizU4rCEaxAU21EgMaHGB5hprcBM",
+       "username": "kkomaz.id"
+     }
+   }
+
+   const usersToInsert = Object.values(users).map((user) => {
+     const { username } = user;
+     const doc = {
+       username,
+       _id: username,
+       radiksType: 'BlockstackUser',
+     }
+     const op = {
+       updateOne: {
+         filter: {
+           _id: username,
+         },
+         update: {
+           $setOnInsert: doc
+         },
+         upsert: true,
+       }
+     }
+     return op;
+   });
+
+   await mongo.bulkWrite(usersToInsert);
+
+ }
+
+ migrate().then(() => {
+   console.log('Done!');
+   process.exit();
+ }).catch((error) => {
+   console.error(error);
+   process.exit();
+ })
+```
