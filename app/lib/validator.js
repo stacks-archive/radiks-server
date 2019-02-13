@@ -26,12 +26,12 @@ class Validator {
   async validateSignature() {
     const { signingKeyId } = this.attrs.userGroupId ? this.attrs : this.previous || this.attrs;
     const {
-      signature, updatable, updatedAt, _id,
+      radiksSignature, updatable, updatedAt, _id,
     } = this.attrs;
     if (updatable === false) {
       return true;
     }
-    this.validatePresent('signature');
+    this.validatePresent('radiksSignature');
     this.validatePresent('signingKeyId');
     this.validatePresent('updatedAt');
     await this.signingKeyMatchesGroup(signingKeyId);
@@ -41,9 +41,9 @@ class Validator {
     }
     const { publicKey } = signingKey;
     const message = `${_id}-${updatedAt}`;
-    const isValidSignature = verifyECDSA(message, publicKey, signature);
+    const isValidSignature = verifyECDSA(message, publicKey, radiksSignature);
     if (!isValidSignature) {
-      errorMessage('Invalid signature provided');
+      errorMessage('Invalid RadiksSignature provided');
     }
     return true;
   }
