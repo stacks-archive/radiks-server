@@ -26,7 +26,7 @@ const makeModelsController = (db) => {
       });
     } catch (error) {
       console.error(error);
-      res.json({
+      res.status(400).json({
         success: false,
         message: error.message,
       });
