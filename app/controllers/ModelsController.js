@@ -5,8 +5,9 @@ const queryToMongo = require('query-to-mongo');
 const { decorateApp } = require('@awaitjs/express');
 
 const Validator = require('../lib/validator');
+const { STREAM_CRAWL_EVENT } = require('../lib/constants');
 
-const makeModelsController = (db) => {
+const makeModelsController = (db, emitter) => {
   const ModelsController = decorateApp(express.Router());
   ModelsController.use(bodyParser.json());
 
@@ -20,6 +21,7 @@ const makeModelsController = (db) => {
     try {
       validator.validate();
       await db.save(attrs);
+      emitter.emit(STREAM_CRAWL_EVENT, [attrs]);
 
       res.json({
         success: true,
