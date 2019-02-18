@@ -13,9 +13,7 @@ module.exports = (db, emitter) => {
         console.error(error);
       });
     };
-    ws.on('open', () => {
-      emitter.addListener(STREAM_CRAWL_EVENT, listener);
-    });
+    emitter.addListener(STREAM_CRAWL_EVENT, listener);
     ws.on('close', () => {
       emitter.removeListener(STREAM_CRAWL_EVENT, listener);
     });
