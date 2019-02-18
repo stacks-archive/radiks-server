@@ -1,3 +1,4 @@
+const { getPublicKeyFromPrivate } = require('blockstack/lib/keys');
 require('./setup');
 const { models } = require('./mocks');
 const getDB = require('./db');
@@ -13,7 +14,7 @@ test('it validates new models', async () => {
     ...models.hank,
   };
   signer.sign(model);
-  expect(model.signature).not.toBeFalsy();
+  expect(model.radiksSignature).not.toBeFalsy();
   const validator = new Validator(db, model);
   expect(await validator.validate()).toEqual(true);
   expect(validator.attrs).toEqual(model);
@@ -39,7 +40,7 @@ test('it doesnt allow mismatched signingKeyId', async () => {
   try {
     await validator.validate();
   } catch (error) {
-    expect(error.message.indexOf('Invalid signature')).not.toEqual(-1);
+    expect(error.message.indexOf('Invalid radiksSignature')).not.toEqual(-1);
   }
 });
 
@@ -119,5 +120,19 @@ test('allows signing with new key if it matches the user group key', async () =>
   newSigner.sign(model);
   await newSigner.save(db);
   const validator = new Validator(db, model);
+  expect(await validator.validate()).toEqual(true);
+});
+
+test('allows users to use personal signing key', async () => {
+  const privateKey = '476055baaef9224ad0f9d082696a35b03f0a75100948d8b76ae1e859946297dd';
+  const publicKey = getPublicKeyFromPrivate(privateKey)
+  const user = {
+    ...models.user,
+    publicKey,
+  }
+  const signer = new Signer(privateKey);
+  const db = await getDB();
+  signer.sign(user);
+  const validator = new Validator(db, user);
   expect(await validator.validate()).toEqual(true);
 });

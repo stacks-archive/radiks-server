@@ -35,15 +35,22 @@ class Validator {
     this.validatePresent('signingKeyId');
     this.validatePresent('updatedAt');
     await this.signingKeyMatchesGroup(signingKeyId);
-    const signingKey = await this.db.findOne({ _id: signingKeyId });
-    if (!signingKey) {
-      errorMessage(`No signing key is present with id: '${signingKeyId}'`);
+    let signingKey;
+    if (signingKeyId === 'personal') {
+      signingKey = {
+        publicKey: this.attrs.publicKey,
+      }
+    } else {
+      signingKey = await this.db.findOne({ _id: signingKeyId });
+      if (!signingKey) {
+        errorMessage(`No signing key is present with id: '${signingKeyId}'`);
+      }
     }
     const { publicKey } = signingKey;
     const message = `${_id}-${updatedAt}`;
     const isValidSignature = verifyECDSA(message, publicKey, radiksSignature);
     if (!isValidSignature) {
-      errorMessage('Invalid RadiksSignature provided');
+      errorMessage('Invalid radiksSignature provided');
     }
     return true;
   }

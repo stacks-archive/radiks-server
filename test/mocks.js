@@ -32,6 +32,11 @@ const models = {
     _id: faker.random.uuid(),
     userGroupId,
   },
+  user: {
+    username: 'hankstoever.id',
+    signingKeyId: 'personal',
+    _id: faker.random.uuid(),
+  }
 };
 
 const saveAll = async () => {

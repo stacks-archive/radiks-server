@@ -3,8 +3,8 @@ const { signECDSA } = require('blockstack/lib/encryption');
 const uuid = require('uuid/v4');
 
 class Signer {
-  constructor() {
-    this.privateKey = makeECPrivateKey();
+  constructor(privateKey) {
+    this.privateKey = privateKey || makeECPrivateKey();
     this.publicKey = getPublicKeyFromPrivate(this.privateKey);
     this._id = uuid();
   }
@@ -24,7 +24,7 @@ class Signer {
     doc.signingKeyId = doc.signingKeyId || this._id;
     const message = `${doc._id}-${doc.updatedAt}`;
     const { signature } = signECDSA(this.privateKey, message);
-    doc.signature = signature;
+    doc.radiksSignature = signature;
     return doc;
   }
 }
