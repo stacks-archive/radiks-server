@@ -4,9 +4,7 @@ const EventEmitter = require('wolfy87-eventemitter');
 const makeModelsController = require('./ModelsController');
 const makeStreamingController = require('./StreamingController');
 const makeCentralController = require('./CentralController');
-
-const COLLECTION = 'radiks-server-data';
-const CENTRAL_COLLECTION = 'radiks-central-data';
+const { COLLECTION, CENTRAL_COLLECTION } = require('../lib/constants');
 
 const makeController = (db) => {
   const router = express.Router();
@@ -32,6 +30,7 @@ const makeController = (db) => {
   router.DB = db;
   router.radiksCollection = radiksCollection;
   router.centralCollection = centralCollection;
+  router.emitter = emitter;
 
   return router;
 };
