@@ -13,7 +13,7 @@ module.exports = (db, emitter) => {
         console.error(error);
       });
     };
-    const ping = setTimeout(() => {
+    const ping = setInterval(() => {
       ws.send('ping');
     }, 15000);
     emitter.addListener(STREAM_CRAWL_EVENT, listener);
