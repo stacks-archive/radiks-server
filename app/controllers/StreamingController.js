@@ -13,8 +13,12 @@ module.exports = (db, emitter) => {
         console.error(error);
       });
     };
+    const ping = setTimeout(() => {
+      ws.send('ping');
+    }, 15000);
     emitter.addListener(STREAM_CRAWL_EVENT, listener);
     ws.on('close', () => {
+      clearTimeout(ping);
       emitter.removeListener(STREAM_CRAWL_EVENT, listener);
     });
   });
