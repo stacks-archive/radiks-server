@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const request = require('request-promise');
 const queryToMongo = require('query-to-mongo');
 const { decorateApp } = require('@awaitjs/express');
+const { verifyECDSA } = require('blockstack/lib/encryption');
 
 const Validator = require('../lib/validator');
 const { STREAM_CRAWL_EVENT } = require('../lib/constants');
@@ -58,6 +59,23 @@ const makeModelsController = (db, emitter) => {
     const { id } = req.params;
     const doc = await db.findOne({ _id: id });
     res.json(doc);
+  });
+
+  ModelsController.deleteAsync('/:id', async (req, res) => {
+    const attrs = await db.findOne({ _id: req.params.id });
+    const { publicKey } = await db.findOne({ _id: attrs.signingKeyId, radiksType: 'SigningKey' });
+    const message = attrs._id;
+    if (verifyECDSA(message, publicKey, req.query.signature)) {
+      await db.deleteOne({ _id: req.params.id });
+      return res.json({
+        success: true,
+      });
+    }
+
+    return res.json({
+      success: false,
+      error: 'Invalid signature',
+    });
   });
 
   return ModelsController;
