@@ -1,7 +1,7 @@
 const { getDB } = require('../app/database/mongodb');
 
 const db = async () => {
-  const url = 'mongodb://localhost:27017/radiks-local-testing';
+  const url = process.env.MONGODB_URI;
   return getDB(url);
 };
 

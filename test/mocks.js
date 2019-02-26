@@ -1,5 +1,6 @@
 const faker = require('faker');
 const getDB = require('./db');
+const { COLLECTION } = require('../app/lib/constants');
 
 const userGroupId = faker.random.uuid();
 
@@ -36,13 +37,13 @@ const models = {
     username: 'hankstoever.id',
     signingKeyId: 'personal',
     _id: faker.random.uuid(),
-  }
+  },
 };
 
 const saveAll = async () => {
   const db = await getDB();
   const data = Object.values(models);
-  await db.insertMany(data);
+  await db.collection(COLLECTION).insertMany(data);
 };
 
 module.exports = {

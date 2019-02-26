@@ -9,7 +9,8 @@
     "radiks-server": "./bin/radiks-server.js"
   },
   "scripts": {
-    "eslint": "eslint ."
+    "eslint": "eslint .",
+    "test": "jest --watch --verbose=true --ci --runInBand"
   },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
@@ -30,6 +31,7 @@
     "yargs": "^12.0.1"
   },
   "devDependencies": {
+    "dotenv": "^6.2.0",
     "eslint": "^5.14.1",
     "eslint-plugin-jest": "^21.25.1",
     "faker": "^4.1.0",

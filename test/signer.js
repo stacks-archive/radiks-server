@@ -1,6 +1,7 @@
 const { makeECPrivateKey, getPublicKeyFromPrivate } = require('blockstack/lib/keys');
 const { signECDSA } = require('blockstack/lib/encryption');
 const uuid = require('uuid/v4');
+const { COLLECTION } = require('../app/lib/constants');
 
 class Signer {
   constructor(privateKey) {
@@ -11,10 +12,11 @@ class Signer {
 
   save(db) {
     const { _id, privateKey, publicKey } = this;
-    return db.insertOne({
+    return db.collection(COLLECTION).insertOne({
       _id,
       privateKey,
       publicKey,
+      radiksType: 'SigningKey',
     });
   }
 
