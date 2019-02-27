@@ -39,8 +39,8 @@ class Validator {
     if (signingKeyId === 'personal') {
       const { publicKey } = this.previous || this.attrs;
       signingKey = {
-        publicKey: publicKey,
-      }
+        publicKey,
+      };
     } else {
       signingKey = await this.db.findOne({ _id: signingKeyId });
       if (!signingKey) {
