@@ -10,7 +10,8 @@
   },
   "scripts": {
     "eslint": "eslint .",
-    "test": "jest --watch --verbose=true --ci --runInBand"
+    "test": "jest --verbose=true --ci --runInBand",
+    "test-watch": "jest --verbose=true --ci --runInBand --watch"
   },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
