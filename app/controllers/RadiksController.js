@@ -12,10 +12,16 @@ const makeController = (db) => {
   const radiksCollection = db.collection(COLLECTION);
   const centralCollection = db.collection(CENTRAL_COLLECTION);
 
-  router.use((req, res, _next) => {
+  router.options('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', '*');
-    _next();
+    res.header('Access-Control-Allow-Headers', 'origin, content-type');
+    next();
+  });
+
+  router.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'origin, content-type');
+    next();
   });
 
   const emitter = new EventEmitter();
