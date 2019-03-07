@@ -50,6 +50,8 @@ Radiks-server is a node.js application that uses [MongoDB](https://www.mongodb.c
 
 To install and run MongoDB, visit their [download page](https://www.mongodb.com/download-center/community). You can also download MongoDB using your favorite package manager. On Mac OS, [homebrew is recommended](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition-with-homebrew).
 
+**You must use MongoDB >=3.6, because they fixed an issue with naming patterns in keys.**
+
 ### Built-in CLI Server
 
 The easiest way to run radiks-server is to use the pre-packaged node.js server that is included with this npm package. To use it, first install `radiks-server`:
