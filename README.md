@@ -12,6 +12,7 @@
   - [Built-in CLI Server](#built-in-cli-server)
   - [Specifying the MongoDB URL](#specifying-the-mongodb-url)
   - [Running a custom Radiks-server](#running-a-custom-radiks-server)
+  - [Options](#options)
   - [Accessing the MongoDB Collection](#accessing-the-mongodb-collection)
     - [Using `getDB` to manually connecting to the MongoDB collection](#using-getdb-to-manually-connecting-to-the-mongodb-collection)
     - [Migration from Firebase (or anywhere else)](#migration-from-firebase-or-anywhere-else)
@@ -174,3 +175,20 @@ const migrate = async () => {
    process.exit();
  })
 ```
+
+### Options
+
+You can specify some options while initiating the Radiks server.
+
+~~~javascript
+const { setup } = require('radiks-server');
+
+setup({
+  ...myOptions
+})
+~~~
+
+Available options:
+
+- `mongoDBUrl` - The MongoDB URL for the Radiks server
+- `maxLimit` - The maximum `limit` field used inside the mongo queries - default to 1000

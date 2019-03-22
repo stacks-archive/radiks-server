@@ -8,7 +8,7 @@ const { verifyECDSA } = require('blockstack/lib/encryption');
 const Validator = require('../lib/validator');
 const { STREAM_CRAWL_EVENT } = require('../lib/constants');
 
-const makeModelsController = (db, emitter) => {
+const makeModelsController = (db, config, emitter) => {
   const ModelsController = decorateApp(express.Router());
   ModelsController.use(bodyParser.json());
 
@@ -38,7 +38,7 @@ const makeModelsController = (db, emitter) => {
 
   ModelsController.getAsync('/find', async (req, res) => {
     const mongo = queryToMongo(req.query, {
-      maxLimit: 1000,
+      maxLimit: config.maxLimit,
     });
 
     const cursor = db.find(mongo.criteria, mongo.options);
