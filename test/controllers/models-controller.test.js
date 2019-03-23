@@ -81,7 +81,10 @@ test('it can delete a model', async () => {
   const radiksData = db.collection(COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
-  const { signature } = signECDSA(signer.privateKey, model._id);
+  const { signature } = signECDSA(
+    signer.privateKey,
+    `${model._id}-${model.updatedAt}`
+  );
   const response = await request(app).del(`/radiks/models/${model._id}`).query({ signature });
   expect(response.body.success).toEqual(true);
   const dbModel = await radiksData.findOne({ _id: model._id });
@@ -97,7 +100,7 @@ test('it cannot delete with an invalid signature', async () => {
   const radiksData = db.collection(COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
-  const { signature } = signECDSA(makeECPrivateKey(), model._id);
+  const { signature } = signECDSA(makeECPrivateKey(), `${model._id}-${model.updatedAt}`);
   const response = await request(app)
     .del(`/radiks/models/${model._id}`)
     .query({ signature });
