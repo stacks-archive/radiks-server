@@ -62,14 +62,18 @@ const makeModelsController = (db, emitter) => {
   });
 
   ModelsController.deleteAsync('/:id', async (req, res) => {
-    const attrs = await db.findOne({ _id: req.params.id });
-    const { publicKey } = await db.findOne({ _id: attrs.signingKeyId, radiksType: 'SigningKey' });
-    const message = attrs._id;
-    if (verifyECDSA(message, publicKey, req.query.signature)) {
-      await db.deleteOne({ _id: req.params.id });
-      return res.json({
-        success: true,
-      });
+    try {
+      const attrs = await db.findOne({ _id: req.params.id });
+      const { publicKey } = await db.findOne({ _id: attrs.signingKeyId, radiksType: 'SigningKey' });
+      const message = attrs._id;
+      if (verifyECDSA(message, publicKey, req.query.signature)) {
+        await db.deleteOne({ _id: req.params.id });
+        return res.json({
+          success: true,
+        });
+      }
+    } catch (error) {
+      console.error(error);
     }
 
     return res.json({
