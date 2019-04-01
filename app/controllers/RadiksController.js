@@ -6,7 +6,7 @@ const makeStreamingController = require('./StreamingController');
 const makeCentralController = require('./CentralController');
 const { COLLECTION, CENTRAL_COLLECTION } = require('../lib/constants');
 
-const makeController = (db) => {
+const makeController = (db, config) => {
   const router = express.Router();
 
   const radiksCollection = db.collection(COLLECTION);
@@ -26,7 +26,7 @@ const makeController = (db) => {
 
   const emitter = new EventEmitter();
 
-  router.use('/models', makeModelsController(radiksCollection, emitter));
+  router.use('/models', makeModelsController(radiksCollection, config, emitter));
 
   router.use('/stream', makeStreamingController(radiksCollection, emitter));
 
