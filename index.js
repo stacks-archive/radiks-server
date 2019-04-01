@@ -4,8 +4,9 @@ const { getDB } = require('./app/database/mongodb');
 
 const setup = async (config = {}) => {
   const db = await getDB(config.mongoDBUrl);
+  const newConfig = { ...config };
   if (!config.maxLimit) {
-    config.maxLimit = 1000;
+    newConfig.maxLimit = 1000;
   }
   const controller = setupController(db, config);
   return controller;
