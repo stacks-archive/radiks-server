@@ -8,7 +8,7 @@ const setup = async (config = {}) => {
   if (!config.maxLimit) {
     newConfig.maxLimit = 1000;
   }
-  const controller = setupController(db, config);
+  const controller = setupController(db, newConfig);
   return controller;
 };
 
