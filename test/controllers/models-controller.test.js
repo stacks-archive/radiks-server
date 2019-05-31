@@ -108,3 +108,10 @@ test('it cannot delete with an invalid signature', async () => {
   const dbModel = await radiksData.findOne({ _id: model._id });
   expect(dbModel).not.toBeNull();
 });
+
+test('it can count', async () => {
+  const app = await getApp();
+  await saveAll();
+  const response = await request(app).get('/radiks/models/count').query({});
+  expect(response.body.total).toBe(7);
+});
