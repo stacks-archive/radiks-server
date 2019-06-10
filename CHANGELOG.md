@@ -1,5 +1,10 @@
 # Radiks-Server Changelog
 
+## 0.1.12 - June 9th, 2019
+
+- Added route to return count of models for a certain query, thanks to @pradel [#9]
+- Update blockstack.js to v19.2.1
+
 ## 0.1.11 - April 5, 2019
 
 - Fixed an issue caused when fixing eslint errors from the [maxLimit PR](https://github.com/blockstack-radiks/radiks-server/pull/5)
