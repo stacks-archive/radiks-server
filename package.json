@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
-    "blockstack": "^18.0.4",
+    "blockstack": "^19.2.1",
     "body-parser": "^1.18.3",
     "elliptic": "^6.4.1",
     "eslint-config-airbnb-base": "^13.1.0",
