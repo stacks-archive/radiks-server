@@ -55,6 +55,18 @@ const makeModelsController = (db, config, emitter) => {
     });
   });
 
+  ModelsController.getAsync('/count', async (req, res) => {
+    const mongo = queryToMongo(req.query, {
+      maxLimit: config.maxLimit,
+    });
+
+    const total = await db.countDocuments(mongo.criteria, mongo.options);
+
+    res.json({
+      total,
+    });
+  });
+
   ModelsController.getAsync('/:id', async (req, res) => {
     const { id } = req.params;
     const doc = await db.findOne({ _id: id });
