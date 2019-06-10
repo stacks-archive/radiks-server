@@ -33,11 +33,12 @@
   },
   "devDependencies": {
     "dotenv": "^6.2.0",
-    "eslint": "^5.14.1",
+    "eslint": "^5.16.0",
     "eslint-plugin-jest": "^21.25.1",
     "faker": "^4.1.0",
-    "jest": "^24.5.0",
+    "jest": "^24.8.0",
     "supertest": "^3.3.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "istanbul-reports": "2.2.5"
   }
 }
