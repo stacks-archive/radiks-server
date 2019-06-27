@@ -5,12 +5,12 @@ const express = require('express');
 const { setup } = require('../index');
 
 const run = () => {
-  setup().then((RadiksController) => {
+  setup().then((radiksRouter) => {
     const port = parseInt(process.env.PORT, 10) || 1260;
 
     const server = express();
 
-    server.use('/radiks', RadiksController);
+    server.use('/radiks', radiksRouter);
 
     server.listen(port, (err) => {
       if (err) throw err;
