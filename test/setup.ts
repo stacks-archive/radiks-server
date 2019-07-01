@@ -7,16 +7,6 @@ dotenv.config({
   path: path.resolve(process.cwd(), '.env.test'),
 });
 
-jest.mock(
-  '../src/lib/validator',
-  () =>
-    class FakeValidator {
-      validate() {
-        return true;
-      }
-    }
-);
-
 jest.mock('request-promise', () => options => {
   const { models } = require('./mocks'); // eslint-disable-line
   const { uri } = options;

@@ -8,6 +8,16 @@ import Signer from '../signer';
 import getDB from '../db';
 import constants from '../../src/lib/constants';
 
+jest.mock(
+  '../../src/lib/validator',
+  () =>
+    class FakeValidator {
+      validate() {
+        return true;
+      }
+    }
+);
+
 test('it can crawl a gaia url', async () => {
   const app = await getApp();
 

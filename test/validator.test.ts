@@ -10,7 +10,7 @@ test('it validates new models', async () => {
   const signer = new Signer();
   const db = await getDB();
   await signer.save(db);
-  const model = {
+  const model: any = {
     ...models.hank,
   };
   signer.sign(model);
@@ -48,7 +48,7 @@ test('it allows changing the signing key if signed with previous signing key', a
   const signer = new Signer();
   const db = await getDB();
   await signer.save(db);
-  const model = {
+  const model: any = {
     ...models.hank,
   };
   signer.sign(model);
@@ -78,7 +78,7 @@ test('it doesnt allow older updatedAt', async () => {
 });
 
 test('a model signing key must match the user group signing key', async () => {
-  const model = {
+  const model: any = {
     ...models.withGroup,
   };
   const group = {
@@ -112,10 +112,10 @@ test('a model signing key must match the user group signing key', async () => {
 });
 
 test('allows signing with new key if it matches the user group key', async () => {
-  const model = {
+  const model: any = {
     ...models.withGroup,
   };
-  const group = {
+  const group: any = {
     ...models.userGroup,
   };
   const oldSigner = new Signer();
