@@ -12,7 +12,7 @@ jest.mock(
   () =>
     class FakeValidator {
       validate() {
-        return this;
+        return true;
       }
     }
 );
