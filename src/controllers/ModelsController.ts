@@ -42,8 +42,8 @@ const makeModelsController = (
       validator.validate();
 
       // We extract the username from the user jwt to save it with the object
-      const { payload } = decodeToken(jwt);
-      attrs.username = (payload as any).username;
+      const { payload } = decodeToken(jwt) as { payload: any };
+      attrs.username = payload.username;
 
       await radiksCollection.save(attrs);
       emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
