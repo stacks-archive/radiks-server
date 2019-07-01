@@ -1,0 +1,14 @@
+{
+  "declaration": true,
+  "compilerOptions": {
+    "target": "esnext",
+    "declaration": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
+    "outDir": "typed",
+    "strict": true
+  },
+  "include": ["src/**/*"]
+}

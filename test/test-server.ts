@@ -1,5 +1,5 @@
-const express = require('express');
-const { setup } = require('..');
+import express from 'express';
+import { setup } from '../src';
 
 const getApp = async () => {
   const app = express();
@@ -12,4 +12,4 @@ const getApp = async () => {
   return app;
 };
 
-module.exports = getApp;
+export default getApp;

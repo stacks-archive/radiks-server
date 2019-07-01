@@ -1,44 +1,86 @@
 {
   "name": "radiks-server",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "An express plugin for building a Radiks server",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "typed",
   "author": "Hank Stoever",
   "license": "MIT",
   "bin": {
     "radiks-server": "./bin/radiks-server.js"
   },
   "scripts": {
-    "eslint": "eslint .",
-    "test": "jest --verbose=true --ci --runInBand",
-    "test-watch": "jest --verbose=true --ci --runInBand --watch"
+    "build": "rm -rf lib typed && yarn compile && yarn typescript",
+    "compile": "babel src -d lib --extensions '.ts,.js'",
+    "compile-watch": "babel src -d lib --watch --extensions '.ts,.js'",
+    "typescript": "tsc",
+    "prettier": "prettier --write '**/*.{js,ts,tsx,json,md,graphql}'",
+    "eslint": "eslint 'src/**/*'",
+    "test": "jest --verbose=true --ci --runInBand test/",
+    "test-watch": "jest --verbose=true --ci --runInBand --watch test/",
+    "prepublishOnly": "yarn build"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
-    "@awaitjs/express": "^0.1.4",
+    "@awaitjs/express": "^0.3.0",
     "blockstack": "^19.2.1",
-    "body-parser": "^1.18.3",
-    "elliptic": "^6.4.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "express": "^4.16.3",
+    "body-parser": "^1.19.0",
+    "elliptic": "^6.5.0",
+    "express": "^4.17.1",
     "express-ws": "^4.0.0",
-    "fs-extra": "^7.0.0",
     "lodash": "^4.17.11",
-    "mongodb": "^3.1.8",
+    "mongodb": "^3.2.7",
     "query-to-mongo": "^0.9.0",
     "request": "^2.88.0",
-    "request-promise": "^4.2.2",
-    "wolfy87-eventemitter": "^5.2.5",
-    "yargs": "^12.0.1"
+    "request-promise": "^4.2.4",
+    "wolfy87-eventemitter": "^5.2.6"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/body-parser": "^1.17.0",
+    "@types/dotenv": "^6.1.1",
+    "@types/elliptic": "^6.4.9",
+    "@types/express": "^4.17.0",
+    "@types/express-ws": "^3.0.0",
+    "@types/jest": "^24.0.15",
+    "@types/mongodb": "^3.1.28",
+    "@types/node": "^12.0.10",
+    "@types/request-promise": "^4.1.44",
+    "@types/supertest": "^2.0.7",
+    "@typescript-eslint/eslint-plugin": "^1.11.0",
+    "@typescript-eslint/parser": "^1.11.0",
     "dotenv": "^6.2.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-jest": "^21.25.1",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.7.1",
+    "eslint-plugin-prettier": "^3.1.0",
     "faker": "^4.1.0",
+    "husky": "^2.7.0",
+    "istanbul-reports": "2.2.6",
     "jest": "^24.8.0",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.18.2",
     "supertest": "^3.3.0",
-    "uuid": "^3.3.2",
-    "istanbul-reports": "2.2.5"
+    "typescript": "^3.5.2",
+    "uuid": "^3.3.2"
   }
 }

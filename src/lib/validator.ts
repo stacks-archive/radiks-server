@@ -1,11 +1,18 @@
-const { verifyECDSA } = require('blockstack/lib/encryption');
+import { Collection } from 'mongodb';
+import { verifyECDSA } from 'blockstack/lib/encryption';
 
-const errorMessage = (message) => {
+const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
 
 class Validator {
-  constructor(db, attrs) {
+  private db: Collection;
+
+  private attrs: any;
+
+  private previous: any;
+
+  constructor(db: Collection, attrs: any) {
     this.db = db;
     this.attrs = attrs;
   }
@@ -34,7 +41,7 @@ class Validator {
     this.validatePresent('radiksSignature');
     this.validatePresent('signingKeyId');
     this.validatePresent('updatedAt');
-    await this.signingKeyMatchesGroup(signingKeyId);
+    await this.signingKeyMatchesGroup();
     let signingKey;
     if (signingKeyId === 'personal') {
       const { publicKey } = this.previous || this.attrs;
@@ -72,11 +79,11 @@ class Validator {
     }
   }
 
-  validatePresent(key) {
+  validatePresent(key: string) {
     if (!this.attrs[key]) {
       errorMessage(`No '${key}' attribute, which is required.`);
     }
   }
 }
 
-module.exports = Validator;
+export default Validator;
