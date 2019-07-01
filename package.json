@@ -2,16 +2,22 @@
   "name": "radiks-server",
   "version": "0.1.12",
   "description": "An express plugin for building a Radiks server",
-  "main": "index.js",
+  "main": "lib/index.js",
+  "types": "typed",
   "author": "Hank Stoever",
   "license": "MIT",
   "bin": {
     "radiks-server": "./bin/radiks-server.js"
   },
   "scripts": {
+    "build": "rm -rf lib && yarn compile && yarn typescript",
+    "compile": "babel src -d lib --extensions '.ts,.js'",
+    "compile-watch": "babel src -d lib --watch --extensions '.ts,.js'",
+    "typescript": "tsc",
     "eslint": "eslint .",
     "test": "jest --verbose=true --ci --runInBand",
-    "test-watch": "jest --verbose=true --ci --runInBand --watch"
+    "test-watch": "jest --verbose=true --ci --runInBand --watch",
+    "prepublishOnly": "yarn build"
   },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
@@ -32,13 +38,18 @@
     "yargs": "^12.0.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
     "dotenv": "^6.2.0",
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^21.25.1",
     "faker": "^4.1.0",
+    "istanbul-reports": "2.2.5",
     "jest": "^24.8.0",
     "supertest": "^3.3.0",
-    "uuid": "^3.3.2",
-    "istanbul-reports": "2.2.5"
+    "typescript": "^3.5.2",
+    "uuid": "^3.3.2"
   }
 }
