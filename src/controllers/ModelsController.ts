@@ -4,11 +4,18 @@ import request from 'request-promise';
 import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
 import { verifyECDSA } from 'blockstack/lib/encryption';
+import { Collection } from 'mongodb';
+import EventEmitter from 'wolfy87-eventemitter';
 
+import { Config } from '../types';
 import Validator from '../lib/validator';
 import constants from '../lib/constants';
 
-const makeModelsController = (db, config, emitter) => {
+const makeModelsController = (
+  radiksCollection: Collection,
+  config: Config,
+  emitter: EventEmitter
+) => {
   const ModelsController = addAsync(express.Router());
   ModelsController.use(bodyParser.json());
 
@@ -18,10 +25,10 @@ const makeModelsController = (db, config, emitter) => {
       uri: gaiaURL,
       json: true,
     });
-    const validator = new Validator(db, attrs);
+    const validator = new Validator(radiksCollection, attrs);
     try {
       validator.validate();
-      await db.save(attrs);
+      await radiksCollection.save(attrs);
       emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
 
       res.json({
@@ -41,7 +48,7 @@ const makeModelsController = (db, config, emitter) => {
       maxLimit: config.maxLimit,
     });
 
-    const cursor = db.find(mongo.criteria, mongo.options);
+    const cursor = radiksCollection.find(mongo.criteria, mongo.options);
     const results = await cursor.toArray();
     const total = await cursor.count();
 
@@ -60,7 +67,10 @@ const makeModelsController = (db, config, emitter) => {
       maxLimit: config.maxLimit,
     });
 
-    const total = await db.countDocuments(mongo.criteria, mongo.options);
+    const total = await radiksCollection.countDocuments(
+      mongo.criteria,
+      mongo.options
+    );
 
     res.json({
       total,
@@ -69,20 +79,20 @@ const makeModelsController = (db, config, emitter) => {
 
   ModelsController.getAsync('/:id', async (req, res) => {
     const { id } = req.params;
-    const doc = await db.findOne({ _id: id });
+    const doc = await radiksCollection.findOne({ _id: id });
     res.json(doc);
   });
 
   ModelsController.deleteAsync('/:id', async (req, res) => {
     try {
-      const attrs = await db.findOne({ _id: req.params.id });
-      const { publicKey } = await db.findOne({
+      const attrs = await radiksCollection.findOne({ _id: req.params.id });
+      const { publicKey } = await radiksCollection.findOne({
         _id: attrs.signingKeyId,
         radiksType: 'SigningKey',
       });
       const message = `${attrs._id}-${attrs.updatedAt}`;
       if (verifyECDSA(message, publicKey, req.query.signature)) {
-        await db.deleteOne({ _id: req.params.id });
+        await radiksCollection.deleteOne({ _id: req.params.id });
         return res.json({
           success: true,
         });

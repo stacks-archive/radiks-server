@@ -1,8 +1,10 @@
 import express from 'express';
 import expressWS from 'express-ws';
+import EventEmitter from 'wolfy87-eventemitter';
+import { Collection } from 'mongodb';
 import constants from '../lib/constants';
 
-export default (db, emitter) => {
+export default (db: Collection, emitter: EventEmitter) => {
   const StreamingController: any = express.Router();
   expressWS(StreamingController);
 

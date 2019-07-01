@@ -1,13 +1,15 @@
 import express from 'express';
 import EventEmitter from 'wolfy87-eventemitter';
+import { Db } from 'mongodb';
 
+import { Config } from '../types';
 import makeModelsController from './ModelsController';
 import makeStreamingController from './StreamingController';
 import makeCentralController from './CentralController';
 import constants from '../lib/constants';
 
-const makeController = (db, config) => {
-  const router: any = express.Router();
+const makeController = (db: Db, config: Config) => {
+  const router = express.Router();
 
   const radiksCollection = db.collection(constants.COLLECTION);
   const centralCollection = db.collection(constants.CENTRAL_COLLECTION);
@@ -38,11 +40,11 @@ const makeController = (db, config) => {
     makeCentralController(radiksCollection, centralCollection)
   );
 
-  router.db = radiksCollection; // for backwards compatibility
-  router.DB = db;
-  router.radiksCollection = radiksCollection;
-  router.centralCollection = centralCollection;
-  router.emitter = emitter;
+  (router as any).db = radiksCollection; // for backwards compatibility
+  (router as any).DB = db;
+  (router as any).radiksCollection = radiksCollection;
+  (router as any).centralCollection = centralCollection;
+  (router as any).emitter = emitter;
 
   return router;
 };
