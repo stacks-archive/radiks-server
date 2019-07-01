@@ -1,9 +1,9 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { verifyECDSA } = require('blockstack/lib/encryption');
-const { decorateApp } = require('@awaitjs/express');
+import express from 'express';
+import bodyParser from 'body-parser';
+import { verifyECDSA } from 'blockstack/lib/encryption';
+import { decorateApp } from '@awaitjs/express';
 
-module.exports = (radiksCollection, centralCollection) => {
+export default (radiksCollection, centralCollection) => {
   const CentralController = decorateApp(express.Router());
   CentralController.use(bodyParser.json());
 
