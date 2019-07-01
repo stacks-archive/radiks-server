@@ -1,14 +1,12 @@
 module.exports = {
-  extends: "airbnb-base",
+  extends: 'airbnb-base',
   env: {
-    "jest/globals": true
+    'jest/globals': true,
   },
   rules: {
-    "import/prefer-default-export": [0],
-    "no-underscore-dangle": [0],
-    "no-console": [0]
+    'import/prefer-default-export': [0],
+    'no-underscore-dangle': [0],
+    'no-console': [0],
   },
-  plugins: [
-    'jest'
-  ]
+  plugins: ['jest'],
 };

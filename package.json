@@ -14,10 +14,26 @@
     "compile": "babel src -d lib --extensions '.ts,.js'",
     "compile-watch": "babel src -d lib --watch --extensions '.ts,.js'",
     "typescript": "tsc",
+    "prettier": "prettier --write '**/*.{js,ts,tsx,json,md,graphql}'",
     "eslint": "eslint .",
     "test": "jest --verbose=true --ci --runInBand",
     "test-watch": "jest --verbose=true --ci --runInBand --watch",
     "prepublishOnly": "yarn build"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   },
   "dependencies": {
     "@awaitjs/express": "^0.1.4",
@@ -49,8 +65,11 @@
     "eslint": "^5.16.0",
     "eslint-plugin-jest": "^21.25.1",
     "faker": "^4.1.0",
+    "husky": "^2.7.0",
     "istanbul-reports": "2.2.5",
     "jest": "^24.8.0",
+    "lint-staged": "^8.2.1",
+    "prettier": "^1.18.2",
     "supertest": "^3.3.0",
     "typescript": "^3.5.2",
     "uuid": "^3.3.2"

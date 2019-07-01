@@ -6,10 +6,9 @@ module.exports = (db, emitter) => {
   const StreamingController = express.Router();
   expressWS(StreamingController);
 
-
-  StreamingController.ws('/', (ws) => {
+  StreamingController.ws('/', ws => {
     const listener = ([attributes]) => {
-      ws.send(JSON.stringify(attributes), (error) => {
+      ws.send(JSON.stringify(attributes), error => {
         console.error(error);
       });
     };

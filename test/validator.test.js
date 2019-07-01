@@ -73,7 +73,9 @@ test('it doesnt allow older updatedAt', async () => {
   await db.collection(COLLECTION).insertOne(model);
   signer.sign(model);
   const validator = new Validator(db.collection(COLLECTION), model);
-  await expect(validator.validate()).rejects.toThrow('Tried to update a non-updatable model');
+  await expect(validator.validate()).rejects.toThrow(
+    'Tried to update a non-updatable model'
+  );
 });
 
 test('a model signing key must match the user group signing key', async () => {
@@ -125,7 +127,8 @@ test('allows signing with new key if it matches the user group key', async () =>
 });
 
 test('allows users to use personal signing key', async () => {
-  const privateKey = '476055baaef9224ad0f9d082696a35b03f0a75100948d8b76ae1e859946297dd';
+  const privateKey =
+    '476055baaef9224ad0f9d082696a35b03f0a75100948d8b76ae1e859946297dd';
   const publicKey = getPublicKeyFromPrivate(privateKey);
   const user = {
     ...models.user,

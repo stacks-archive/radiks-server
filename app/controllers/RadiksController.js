@@ -26,11 +26,17 @@ const makeController = (db, config) => {
 
   const emitter = new EventEmitter();
 
-  router.use('/models', makeModelsController(radiksCollection, config, emitter));
+  router.use(
+    '/models',
+    makeModelsController(radiksCollection, config, emitter)
+  );
 
   router.use('/stream', makeStreamingController(radiksCollection, emitter));
 
-  router.use('/central', makeCentralController(radiksCollection, centralCollection));
+  router.use(
+    '/central',
+    makeCentralController(radiksCollection, centralCollection)
+  );
 
   router.db = radiksCollection; // for backwards compatibility
   router.DB = db;

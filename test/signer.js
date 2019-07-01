@@ -1,4 +1,7 @@
-const { makeECPrivateKey, getPublicKeyFromPrivate } = require('blockstack/lib/keys');
+const {
+  makeECPrivateKey,
+  getPublicKeyFromPrivate,
+} = require('blockstack/lib/keys');
 const { signECDSA } = require('blockstack/lib/encryption');
 const uuid = require('uuid/v4');
 const { COLLECTION } = require('../app/lib/constants');

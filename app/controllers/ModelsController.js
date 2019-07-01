@@ -76,7 +76,10 @@ const makeModelsController = (db, config, emitter) => {
   ModelsController.deleteAsync('/:id', async (req, res) => {
     try {
       const attrs = await db.findOne({ _id: req.params.id });
-      const { publicKey } = await db.findOne({ _id: attrs.signingKeyId, radiksType: 'SigningKey' });
+      const { publicKey } = await db.findOne({
+        _id: attrs.signingKeyId,
+        radiksType: 'SigningKey',
+      });
       const message = `${attrs._id}-${attrs.updatedAt}`;
       if (verifyECDSA(message, publicKey, req.query.signature)) {
         await db.deleteOne({ _id: req.params.id });
