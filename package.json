@@ -10,7 +10,7 @@
     "radiks-server": "./bin/radiks-server.js"
   },
   "scripts": {
-    "build": "rm -rf lib && yarn compile && yarn typescript",
+    "build": "rm -rf lib typed && yarn compile && yarn typescript",
     "compile": "babel src -d lib --extensions '.ts,.js'",
     "compile-watch": "babel src -d lib --watch --extensions '.ts,.js'",
     "typescript": "tsc",
