@@ -16,8 +16,8 @@
     "typescript": "tsc",
     "prettier": "prettier --write '**/*.{js,ts,tsx,json,md,graphql}'",
     "eslint": "eslint 'src/**/*'",
-    "test": "jest --verbose=true --ci --runInBand",
-    "test-watch": "jest --verbose=true --ci --runInBand --watch",
+    "test": "jest --verbose=true --ci --runInBand test/",
+    "test-watch": "jest --verbose=true --ci --runInBand --watch test/",
     "prepublishOnly": "yarn build"
   },
   "prettier": {
