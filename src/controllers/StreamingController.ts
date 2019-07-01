@@ -3,7 +3,7 @@ import expressWS from 'express-ws';
 import constants from '../lib/constants';
 
 export default (db, emitter) => {
-  const StreamingController = express.Router();
+  const StreamingController: any = express.Router();
   expressWS(StreamingController);
 
   StreamingController.ws('/', ws => {
