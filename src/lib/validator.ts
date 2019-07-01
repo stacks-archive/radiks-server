@@ -7,7 +7,9 @@ const errorMessage = (message) => {
 
 class Validator {
   private db: Collection;
+
   private attrs: any;
+
   private previous: any;
 
   constructor(db: Collection, attrs: any) {
