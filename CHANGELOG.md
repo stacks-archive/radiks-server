@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 1.0.0.beta-1 - July 1st, 2019
+
+- Ported existing codebase to Typescript. Thanks to [@pradel](https://github.com/blockstack-radiks/radiks-server/pull/14)!
+
 ## 0.1.12 - June 9th, 2019
 
 - Added route to return count of models for a certain query, thanks to @pradel [#9]
