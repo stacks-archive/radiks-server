@@ -1,6 +1,6 @@
-import makeModelsController from '../app/controllers/ModelsController';
-import setupController from '../app/controllers/RadiksController';
-import { getDB } from '../app/database/mongodb';
+import makeModelsController from './controllers/ModelsController';
+import setupController from './controllers/RadiksController';
+import { getDB } from './database/mongodb';
 
 interface Options {
   mongoDBUrl?: string;
