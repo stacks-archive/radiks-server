@@ -4,13 +4,13 @@ import EventEmitter from 'wolfy87-eventemitter';
 import makeModelsController from './ModelsController';
 import makeStreamingController from './StreamingController';
 import makeCentralController from './CentralController';
-const { COLLECTION, CENTRAL_COLLECTION } = require('../lib/constants');
+import constants from '../lib/constants';
 
 const makeController = (db, config) => {
   const router: any = express.Router();
 
-  const radiksCollection = db.collection(COLLECTION);
-  const centralCollection = db.collection(CENTRAL_COLLECTION);
+  const radiksCollection = db.collection(constants.COLLECTION);
+  const centralCollection = db.collection(constants.CENTRAL_COLLECTION);
 
   router.options('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
