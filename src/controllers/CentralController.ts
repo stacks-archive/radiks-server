@@ -1,10 +1,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import { verifyECDSA } from 'blockstack/lib/encryption';
-import { decorateApp } from '@awaitjs/express';
+import { addAsync } from '@awaitjs/express';
 
 export default (radiksCollection, centralCollection) => {
-  const CentralController = decorateApp(express.Router());
+  const CentralController = addAsync(express.Router());
   CentralController.use(bodyParser.json());
 
   CentralController.postAsync('/', async (req, res) => {
