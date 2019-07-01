@@ -1,6 +1,6 @@
-import { MongoClient } from 'mongodb';
+import { MongoClient, Db } from 'mongodb';
 
-export const getDB = (url?: string) =>
+export const getDB = (url?: string): Promise<Db> =>
   new Promise(async (resolve, reject) => {
     const _url =
       url ||

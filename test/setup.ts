@@ -1,12 +1,14 @@
-const path = require('path');
-require('dotenv').config({
+import dotenv from 'dotenv';
+import path from 'path';
+import getDB from './db';
+import constants from '../src/lib/constants';
+
+dotenv.config({
   path: path.resolve(process.cwd(), '.env.test'),
 });
-const getDB = require('./db');
-const { COLLECTION } = require('../app/lib/constants');
 
 jest.mock(
-  '../app/lib/validator',
+  '../src/lib/validator',
   () =>
     class FakeValidator {
       validate() {
@@ -24,7 +26,7 @@ jest.mock('request-promise', () => options => {
 beforeEach(async done => {
   const db = await getDB();
   try {
-    await db.collection(COLLECTION).drop();
+    await db.collection(constants.COLLECTION).drop();
   } catch (error) {
     // collection doesn't exist
     // console.error(error);

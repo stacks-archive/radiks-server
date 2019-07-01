@@ -1,12 +1,12 @@
-require('../setup');
-const request = require('supertest');
-const { signECDSA } = require('blockstack/lib/encryption');
-const { makeECPrivateKey } = require('blockstack/lib/keys');
-const getApp = require('../test-server');
-const { models, saveAll } = require('../mocks');
-const Signer = require('../signer');
-const getDB = require('../db');
-const { COLLECTION } = require('../../app/lib/constants');
+import '../setup';
+import request from 'supertest';
+import { signECDSA } from 'blockstack/lib/encryption';
+import { makeECPrivateKey } from 'blockstack/lib/keys';
+import getApp from '../test-server';
+import { models, saveAll } from '../mocks';
+import Signer from '../signer';
+import getDB from '../db';
+import constants from '../../src/lib/constants';
 
 test('it can crawl a gaia url', async () => {
   const app = await getApp();
@@ -86,7 +86,7 @@ test('it can delete a model', async () => {
   const signer = new Signer();
   signer.sign(model);
   const db = await getDB();
-  const radiksData = db.collection(COLLECTION);
+  const radiksData = db.collection(constants.COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
   const { signature } = signECDSA(
@@ -107,7 +107,7 @@ test('it cannot delete with an invalid signature', async () => {
   const signer = new Signer();
   signer.sign(model);
   const db = await getDB();
-  const radiksData = db.collection(COLLECTION);
+  const radiksData = db.collection(constants.COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
   const { signature } = signECDSA(

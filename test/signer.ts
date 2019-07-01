@@ -1,13 +1,14 @@
-const {
-  makeECPrivateKey,
-  getPublicKeyFromPrivate,
-} = require('blockstack/lib/keys');
-const { signECDSA } = require('blockstack/lib/encryption');
-const uuid = require('uuid/v4');
-const { COLLECTION } = require('../app/lib/constants');
+import { makeECPrivateKey, getPublicKeyFromPrivate } from 'blockstack/lib/keys';
+import { signECDSA } from 'blockstack/lib/encryption';
+import uuid from 'uuid/v4';
+import constants from '../src/lib/constants';
 
-class Signer {
-  constructor(privateKey) {
+export default class Signer {
+  private _id: string;
+  private privateKey: string;
+  private publicKey: string;
+
+  constructor(privateKey?: string) {
     this.privateKey = privateKey || makeECPrivateKey();
     this.publicKey = getPublicKeyFromPrivate(this.privateKey);
     this._id = uuid();
@@ -15,7 +16,7 @@ class Signer {
 
   save(db) {
     const { _id, privateKey, publicKey } = this;
-    return db.collection(COLLECTION).insertOne({
+    return db.collection(constants.COLLECTION).insertOne({
       _id,
       privateKey,
       publicKey,
@@ -33,5 +34,3 @@ class Signer {
     return doc;
   }
 }
-
-module.exports = Signer;
