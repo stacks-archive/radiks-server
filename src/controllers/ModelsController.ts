@@ -1,15 +1,15 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const request = require('request-promise');
-const queryToMongo = require('query-to-mongo');
-const { decorateApp } = require('@awaitjs/express');
-const { verifyECDSA } = require('blockstack/lib/encryption');
+import express from 'express';
+import bodyParser from 'body-parser';
+import request from 'request-promise';
+import queryToMongo from 'query-to-mongo';
+import { addAsync } from '@awaitjs/express';
+import { verifyECDSA } from 'blockstack/lib/encryption';
 
-const Validator = require('../lib/validator');
-const { STREAM_CRAWL_EVENT } = require('../lib/constants');
+import Validator from '../lib/validator';
+import constants from '../lib/constants';
 
 const makeModelsController = (db, config, emitter) => {
-  const ModelsController = decorateApp(express.Router());
+  const ModelsController = addAsync(express.Router());
   ModelsController.use(bodyParser.json());
 
   ModelsController.post('/crawl', async (req, res) => {
@@ -22,7 +22,7 @@ const makeModelsController = (db, config, emitter) => {
     try {
       validator.validate();
       await db.save(attrs);
-      emitter.emit(STREAM_CRAWL_EVENT, [attrs]);
+      emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
 
       res.json({
         success: true,
@@ -100,4 +100,4 @@ const makeModelsController = (db, config, emitter) => {
   return ModelsController;
 };
 
-module.exports = makeModelsController;
+export default makeModelsController;

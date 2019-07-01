@@ -1,13 +1,13 @@
-const express = require('express');
-const EventEmitter = require('wolfy87-eventemitter');
+import express from 'express';
+import EventEmitter from 'wolfy87-eventemitter';
 
-const makeModelsController = require('./ModelsController');
-const makeStreamingController = require('./StreamingController');
-const makeCentralController = require('./CentralController');
+import makeModelsController from './ModelsController';
+import makeStreamingController from './StreamingController';
+import makeCentralController from './CentralController';
 const { COLLECTION, CENTRAL_COLLECTION } = require('../lib/constants');
 
 const makeController = (db, config) => {
-  const router = express.Router();
+  const router: any = express.Router();
 
   const radiksCollection = db.collection(COLLECTION);
   const centralCollection = db.collection(CENTRAL_COLLECTION);
@@ -47,4 +47,4 @@ const makeController = (db, config) => {
   return router;
 };
 
-module.exports = makeController;
+export default makeController;

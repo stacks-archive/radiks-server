@@ -1,8 +1,8 @@
-const express = require('express');
-const expressWS = require('express-ws');
-const { STREAM_CRAWL_EVENT } = require('../lib/constants');
+import express from 'express';
+import expressWS from 'express-ws';
+import constants from '../lib/constants';
 
-module.exports = (db, emitter) => {
+export default (db, emitter) => {
   const StreamingController = express.Router();
   expressWS(StreamingController);
 
@@ -15,10 +15,10 @@ module.exports = (db, emitter) => {
     const ping = setInterval(() => {
       ws.send('ping');
     }, 15000);
-    emitter.addListener(STREAM_CRAWL_EVENT, listener);
+    emitter.addListener(constants.STREAM_CRAWL_EVENT, listener);
     ws.on('close', () => {
       clearTimeout(ping);
-      emitter.removeListener(STREAM_CRAWL_EVENT, listener);
+      emitter.removeListener(constants.STREAM_CRAWL_EVENT, listener);
     });
   });
 
