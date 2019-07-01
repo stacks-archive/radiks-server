@@ -86,7 +86,7 @@ const makeModelsController = (
   ModelsController.deleteAsync('/:id', async (req, res) => {
     try {
       const attrs = await radiksCollection.findOne({ _id: req.params.id });
-      const { publicKey } = await radiksCollection.findOne({
+      const { publicKey } = await radiksCollection.findOne<any>({
         _id: attrs.signingKeyId,
         radiksType: 'SigningKey',
       });

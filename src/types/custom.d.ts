@@ -15,3 +15,5 @@ declare module '@awaitjs/express' {
 
   export function addAsync(router: express.Router): AsyncRouter;
 }
+
+declare module 'query-to-mongo';

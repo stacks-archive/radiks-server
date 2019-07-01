@@ -14,7 +14,7 @@ export default (
   CentralController.postAsync('/', async (req, res) => {
     const { key, value, signature, username } = req.body;
 
-    const { publicKey } = await radiksCollection.findOne({
+    const { publicKey } = await radiksCollection.findOne<any>({
       username,
       radiksType: 'BlockstackUser',
     });
@@ -38,7 +38,7 @@ export default (
     const { username, signature } = req.query;
     const { key } = req.params;
     const _id = `${username}-${key}`;
-    const { publicKey } = await radiksCollection.findOne({
+    const { publicKey } = await radiksCollection.findOne<any>({
       username,
       radiksType: 'BlockstackUser',
     });

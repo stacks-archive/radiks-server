@@ -8,9 +8,9 @@ export default (db: Collection, emitter: EventEmitter) => {
   const StreamingController: any = express.Router();
   expressWS(StreamingController);
 
-  StreamingController.ws('/', ws => {
-    const listener = ([attributes]) => {
-      ws.send(JSON.stringify(attributes), error => {
+  StreamingController.ws('/', (ws: any) => {
+    const listener = ([attributes]: any) => {
+      ws.send(JSON.stringify(attributes), (error: Error) => {
         console.error(error);
       });
     };

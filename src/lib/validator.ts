@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
 
-const errorMessage = (message) => {
+const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
 
@@ -79,7 +79,7 @@ class Validator {
     }
   }
 
-  validatePresent(key) {
+  validatePresent(key: string) {
     if (!this.attrs[key]) {
       errorMessage(`No '${key}' attribute, which is required.`);
     }
