@@ -21,7 +21,7 @@ const makeModelsController = (
   const ModelsController = addAsync(express.Router());
   ModelsController.use(bodyParser.json());
 
-  ModelsController.post('/crawl', async (req, res) => {
+  ModelsController.postAsync('/crawl', async (req, res) => {
     const { gaiaURL, jwt } = req.body;
 
     // const nameLookupURL = 'https://core.blockstack.org/v1/names/';
@@ -39,7 +39,7 @@ const makeModelsController = (
     });
     const validator = new Validator(radiksCollection, attrs);
     try {
-      validator.validate();
+      await validator.validate();
 
       // We extract the username from the user jwt to save it with the object
       const { payload } = decodeToken(jwt) as { payload: any };
