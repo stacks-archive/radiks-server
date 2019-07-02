@@ -43,14 +43,7 @@ class Validator {
     this.validatePresent('updatedAt');
 
     let publicKey: string;
-    if (this.attrs.username) {
-      const radiksUser = await this.db.findOne({ _id: this.attrs.username });
-      if (!radiksUser) {
-        errorMessage(`No user is present with username: '${this.attrs.username}'`);
-      }
-      publicKey = radiksUser.publicKey;
-    } else {
-      this.validatePresent('signingKeyId');
+    if (this.attrs.signingKeyId) {
       await this.signingKeyMatchesGroup();
       let signingKey;
       if (signingKeyId === 'personal') {
@@ -65,6 +58,13 @@ class Validator {
         }
       }
       publicKey = signingKey.publicKey
+    } else {
+      this.validatePresent('username');
+      const radiksUser = await this.db.findOne({ _id: this.attrs.username });
+      if (!radiksUser) {
+        errorMessage(`No user is present with username: '${this.attrs.username}'`);
+      }
+      publicKey = radiksUser.publicKey;
     }
     
     const message = `${_id}-${updatedAt}`;
