@@ -38,23 +38,35 @@ class Validator {
     if (updatable === false) {
       return true;
     }
+
     this.validatePresent('radiksSignature');
-    this.validatePresent('signingKeyId');
     this.validatePresent('updatedAt');
-    await this.signingKeyMatchesGroup();
-    let signingKey;
-    if (signingKeyId === 'personal') {
-      const { publicKey } = this.previous || this.attrs;
-      signingKey = {
-        publicKey,
-      };
-    } else {
-      signingKey = await this.db.findOne({ _id: signingKeyId });
-      if (!signingKey) {
-        errorMessage(`No signing key is present with id: '${signingKeyId}'`);
+
+    let publicKey: string;
+    if (this.attrs.username) {
+      const radiksUser = await this.db.findOne({ _id: this.attrs.username });
+      if (!radiksUser) {
+        errorMessage(`No user is present with username: '${this.attrs.username}'`);
       }
+      publicKey = radiksUser.publicKey;
+    } else {
+      this.validatePresent('signingKeyId');
+      await this.signingKeyMatchesGroup();
+      let signingKey;
+      if (signingKeyId === 'personal') {
+        const { publicKey } = this.previous || this.attrs;
+        signingKey = {
+          publicKey,
+        };
+      } else {
+        signingKey = await this.db.findOne({ _id: signingKeyId });
+        if (!signingKey) {
+          errorMessage(`No signing key is present with id: '${signingKeyId}'`);
+        }
+      }
+      publicKey = signingKey.publicKey
     }
-    const { publicKey } = signingKey;
+    
     const message = `${_id}-${updatedAt}`;
     const isValidSignature = verifyECDSA(message, publicKey, radiksSignature);
     if (!isValidSignature) {
