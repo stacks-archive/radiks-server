@@ -22,16 +22,7 @@ const makeModelsController = (
   ModelsController.use(bodyParser.json());
 
   ModelsController.postAsync('/crawl', async (req, res) => {
-    const { gaiaURL, jwt } = req.body;
-
-    // const nameLookupURL = 'https://core.blockstack.org/v1/names/';
-    // if (!(await verifyAuthResponse(jwt, nameLookupURL))) {
-    //   // Always failing on this check doPublicKeysMatchUsername
-    //   // return of verifyAuthResponse is [ true, true, true, true, false ]
-    //   return res
-    //     .status(400)
-    //     .json({ success: false, message: 'Invalid auth response' });
-    // }
+    const { gaiaURL } = req.body;
 
     const attrs = await request({
       uri: gaiaURL,
@@ -40,10 +31,6 @@ const makeModelsController = (
     const validator = new Validator(radiksCollection, attrs);
     try {
       await validator.validate();
-
-      // We extract the username from the user jwt to save it with the object
-      const { payload } = decodeToken(jwt) as { payload: any };
-      attrs.username = payload.username;
 
       await radiksCollection.save(attrs);
       emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
