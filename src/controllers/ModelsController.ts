@@ -4,8 +4,6 @@ import request from 'request-promise';
 import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
 import { verifyECDSA } from 'blockstack/lib/encryption';
-import { verifyAuthResponse } from 'blockstack/lib/auth/authVerification';
-import { decodeToken } from 'jsontokens';
 import { Collection } from 'mongodb';
 import EventEmitter from 'wolfy87-eventemitter';
 
