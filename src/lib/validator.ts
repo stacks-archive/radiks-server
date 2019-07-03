@@ -1,9 +1,33 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
-import { verifyAuthResponse } from 'blockstack/lib/auth/authVerification';
+import {
+  isIssuanceDateValid,
+  doSignaturesMatchPublicKeys,
+  doPublicKeysMatchIssuer,
+  doPublicKeysMatchUsername,
+} from 'blockstack/lib/auth/authVerification';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
+};
+
+/**
+ * Verify the authentication response is valid
+ * This function has been extracted from `blockstack/lib/auth/authVerification`
+ * We need to check that the token is valid but we don't need to check the expiration date
+ */
+const verifyAuthResponse = async (token: string, nameLookupURL: string) => {
+  const values = await Promise.all([
+    isIssuanceDateValid(token),
+    doSignaturesMatchPublicKeys(token),
+    doPublicKeysMatchIssuer(token),
+    doPublicKeysMatchUsername(token, nameLookupURL),
+  ]);
+  if (values.every(Boolean)) {
+    return true;
+  } else {
+    return false;
+  }
 };
 
 class Validator {
@@ -32,10 +56,10 @@ class Validator {
   }
 
   async validateSignature() {
-    const { signingKeyId } = this.attrs.userGroupId ? this.attrs : this.previous || this.attrs;
-    const {
-      radiksSignature, updatable, updatedAt, _id,
-    } = this.attrs;
+    const { signingKeyId } = this.attrs.userGroupId
+      ? this.attrs
+      : this.previous || this.attrs;
+    const { radiksSignature, updatable, updatedAt, _id } = this.attrs;
     if (updatable === false) {
       return true;
     }
@@ -58,23 +82,30 @@ class Validator {
           errorMessage(`No signing key is present with id: '${signingKeyId}'`);
         }
       }
-      publicKey = signingKey.publicKey
+      publicKey = signingKey.publicKey;
     } else {
       this.validatePresent('username');
       const radiksUser = await this.db.findOne({ _id: this.attrs.username });
       if (!radiksUser) {
-        errorMessage(`No user is present with username: '${this.attrs.username}'`);
+        errorMessage(
+          `No user is present with username: '${this.attrs.username}'`
+        );
       }
       if (!radiksUser.authResponseToken) {
-        errorMessage(`No authResponseToken found for user: '${this.attrs.username}'`);
+        errorMessage(
+          `No authResponseToken found for user: '${this.attrs.username}'`
+        );
       }
       const nameLookupURL = 'https://core.blockstack.org/v1/names/';
-      if (!(await verifyAuthResponse(radiksUser.authResponseToken, nameLookupURL))) {
-        errorMessage(`Invalid auth response for user: '${this.attrs.username}'`);
+      if (
+        !(await verifyAuthResponse(radiksUser.authResponseToken, nameLookupURL))
+      ) {
+        errorMessage(
+          `Invalid auth response for user: '${this.attrs.username}'`
+        );
       }
       publicKey = radiksUser.publicKey;
     }
-    
     const message = `${_id}-${updatedAt}`;
     const isValidSignature = verifyECDSA(message, publicKey, radiksSignature);
     if (!isValidSignature) {
@@ -94,7 +125,7 @@ class Validator {
   }
 
   async validatePrevious() {
-    if (this.previous && (this.attrs.updatable === false)) {
+    if (this.previous && this.attrs.updatable === false) {
       errorMessage('Tried to update a non-updatable model');
     }
   }
