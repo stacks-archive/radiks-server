@@ -4,7 +4,7 @@ import setupController from './controllers/RadiksController';
 import { getDB } from './database/mongodb';
 
 /**
- * radiks-server use the `verifyAuthResponse` from `blockstack` which needs access to a global fetch object
+ * radiks-server use the `doPublicKeysMatchUsername` from `blockstack` which needs access to a global fetch object
  */
 if (!global.fetch) {
   global.fetch = fetch;
