@@ -1,6 +1,14 @@
+import fetch from 'node-fetch';
 import makeModelsController from './controllers/ModelsController';
 import setupController from './controllers/RadiksController';
 import { getDB } from './database/mongodb';
+
+/**
+ * radiks-server use the `verifyAuthResponse` from `blockstack` which needs access to a global fetch object
+ */
+if (!global.fetch) {
+  global.fetch = fetch;
+}
 
 interface Options {
   mongoDBUrl?: string;

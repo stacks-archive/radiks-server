@@ -1,5 +1,6 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
+import { verifyAuthResponse } from 'blockstack/lib/auth/authVerification';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
@@ -63,6 +64,13 @@ class Validator {
       const radiksUser = await this.db.findOne({ _id: this.attrs.username });
       if (!radiksUser) {
         errorMessage(`No user is present with username: '${this.attrs.username}'`);
+      }
+      if (!radiksUser.authResponseToken) {
+        errorMessage(`No authResponseToken found for user: '${this.attrs.username}'`);
+      }
+      const nameLookupURL = 'https://core.blockstack.org/v1/names/';
+      if (!(await verifyAuthResponse(radiksUser.authResponseToken, nameLookupURL))) {
+        errorMessage(`Invalid auth response for user: '${this.attrs.username}'`);
       }
       publicKey = radiksUser.publicKey;
     }
