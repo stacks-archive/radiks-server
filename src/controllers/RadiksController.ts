@@ -17,12 +17,14 @@ const makeController = (db: Db, config: Config) => {
   router.options('*', (req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'origin, content-type');
+    res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE');
     next();
   });
 
   router.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'origin, content-type');
+    res.header('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, DELETE');
     next();
   });
 
