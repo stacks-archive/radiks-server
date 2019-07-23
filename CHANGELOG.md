@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 0.1.13 - June 22, 2019
+
+- Fixed CORS error blocking DELETE requests
+
 ## 0.1.12 - June 9th, 2019
 
 - Added route to return count of models for a certain query, thanks to @pradel [#9]

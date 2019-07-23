@@ -1,6 +1,6 @@
 {
   "name": "radiks-server",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "description": "An express plugin for building a Radiks server",
   "main": "index.js",
   "author": "Hank Stoever",
