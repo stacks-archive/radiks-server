@@ -1,15 +1,13 @@
 import { MongoClient, Db } from 'mongodb';
 
-export const getDB = (url?: string): Promise<Db> =>
-  new Promise(async (resolve, reject) => {
-    const _url =
-      url ||
-      process.env.MONGODB_URI ||
-      'mongodb://localhost:27017/radiks-server';
-    MongoClient.connect(_url, { useNewUrlParser: true }, (err, client) => {
-      if (err) {
-        return reject(err);
-      }
-      return resolve(client.db());
-    });
+export const getDB = async (url?: string): Promise<Db> => {
+  const _url =
+    url || process.env.MONGODB_URI || 'mongodb://localhost:27017/radiks-server';
+  const client = new MongoClient(_url, {
+    useNewUrlParser: true,
+    reconnectTries: Number.MAX_VALUE,
+    reconnectInterval: 1000, // every 1 second
   });
+  await client.connect();
+  return client.db();
+};

@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 1.0.0-beta.3 - July 22nd, 2019
+
+- Adds configuration to automatically try reconnecting to MongoDB if the connection was destroyed
+
 ## 1.0.0-beta.2 - July 22nd, 2019
 
 - Updated `radiks-server` bin file to use correct path, which was broken during the TypeScript merge
