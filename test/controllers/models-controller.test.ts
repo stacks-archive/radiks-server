@@ -138,5 +138,5 @@ test('it can count', async () => {
   const response = await request(app)
     .get('/radiks/models/count')
     .query({});
-  expect(response.body.total).toBe(7);
+  expect(response.body.total).toBe(Object.keys(models).length);
 });
