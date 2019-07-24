@@ -90,13 +90,19 @@ class Validator {
     }
   }
 
+  /**
+   * If a username is included in the model attributes, then validate that
+   * the model was created by the owner of the username. This is done by matching
+   * the Gaia URL to any Gaia URL in that user's profile.json
+   */
   async validateUsername(): Promise<boolean> {
     if (!(this.attrs.username && this.gaiaURL)) {
       return true;
     }
-    const gaiaUrls = await this.fetchProfileAppsGaiaUrls();
-    const gaiaPrefix = this.attrs.gaiaURL.match(/(.*)\/[\d|[a-z]|-]*^/)[1];
-    const foundUrl = gaiaUrls.find((url) => url.startsWith(gaiaPrefix));
+    const gaiaAddresses = await this.fetchProfileGaiaAddresses();
+    const gaiaAddressParts = this.gaiaURL.split('/');
+    const gaiaAddress = gaiaAddressParts[gaiaAddressParts.length - 2];
+    const foundUrl = gaiaAddresses.find((address) => address === gaiaAddress);
 
     if (!foundUrl) {
       return errorMessage('Username does not match provided Gaia URL');
@@ -106,9 +112,9 @@ class Validator {
   }
 
   /**
-   * Fetch all gaia URLs from the 'apps' object in this user's profile.json
+   * Fetch all gaia addresses from the 'apps' object in this user's profile.json
    */
-  private async fetchProfileAppsGaiaUrls(): Promise<string[]> {
+  private async fetchProfileGaiaAddresses(): Promise<string[]> {
     const uri = `https://core.blockstack.org/v1/users/${this.attrs.username}`;
     try {
       const response = await request({
@@ -117,7 +123,11 @@ class Validator {
       });
       const user = response[this.attrs.username];
       if (user && user.profile && user.profile.apps) {
-        return Object.values(user.profile.apps);
+        const urls: string[] = Object.values(user.profile.apps);
+        return urls.map((url) => {
+          const parts = url.split('/');
+          return parts[parts.length - 2];
+        });
       }
       return [];
     } catch (error) {
