@@ -42,7 +42,7 @@ const models = {
   },
   withUsername: {
     username: 'hankstoever.id',
-    gaiaUrl: `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${withUsernameId}`,
+    gaiaURL: `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${withUsernameId}`,
     _id: withUsernameId,
   },
 };

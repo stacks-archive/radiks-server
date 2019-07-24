@@ -149,11 +149,11 @@ test('allows users to use personal signing key', async () => {
   expect(await validator.validate()).toEqual(true);
 });
 
-test.only('throws if username included and gaia URL not found in profile', async () => {
+test('throws if username included and gaia URL not found in profile', async () => {
   const model = {
     ...models.withUsername,
   };
-  model.gaiaUrl = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTF/${model._id}`;
+  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTF/${model._id}`;
   const signer = new Signer();
   const db = await getDB();
   signer.sign(model);
@@ -162,18 +162,18 @@ test.only('throws if username included and gaia URL not found in profile', async
   const validator = new Validator(
     db.collection(constants.COLLECTION),
     model,
-    model.gaiaUrl
+    model.gaiaURL
   );
   await expect(validator.validate()).rejects.toThrow(
     'Username does not match provided Gaia URL'
   );
 });
 
-test.only('is valid if username included and gaia URL is found in profile', async () => {
+test('is valid if username included and gaia URL is found in profile', async () => {
   const model = {
     ...models.withUsername,
   };
-  model.gaiaUrl = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${model._id}`;
+  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${model._id}`;
   const signer = new Signer();
   const db = await getDB();
   signer.sign(model);
@@ -182,7 +182,7 @@ test.only('is valid if username included and gaia URL is found in profile', asyn
   const validator = new Validator(
     db.collection(constants.COLLECTION),
     model,
-    model.gaiaUrl
+    model.gaiaURL
   );
   expect(await validator.validate()).toEqual(true);
 });

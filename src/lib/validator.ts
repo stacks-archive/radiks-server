@@ -13,12 +13,12 @@ class Validator {
 
   public previous: any;
 
-  public gaiaUrl?: string;
+  public gaiaURL?: string;
 
-  constructor(db: Collection, attrs: any, gaiaUrl?: string) {
+  constructor(db: Collection, attrs: any, gaiaURL?: string) {
     this.db = db;
     this.attrs = attrs;
-    this.gaiaUrl = gaiaUrl;
+    this.gaiaURL = gaiaURL;
   }
 
   async validate() {
@@ -91,11 +91,11 @@ class Validator {
   }
 
   async validateUsername(): Promise<boolean> {
-    if (!(this.attrs.username && this.gaiaUrl)) {
+    if (!(this.attrs.username && this.gaiaURL)) {
       return true;
     }
     const gaiaUrls = await this.fetchProfileAppsGaiaUrls();
-    const gaiaPrefix = this.attrs.gaiaUrl.match(/(.*)\/[\d|[a-z]|-]*^/)[1];
+    const gaiaPrefix = this.attrs.gaiaURL.match(/(.*)\/[\d|[a-z]|-]*^/)[1];
     const foundUrl = gaiaUrls.find((url) => url.startsWith(gaiaPrefix));
 
     if (!foundUrl) {
