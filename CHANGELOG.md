@@ -11,6 +11,10 @@
 
 - Fix from @pradel around validating models before saving them. [#20](https://github.com/blockstack-radiks/radiks-server/pull/20)
 
+## 1.1.0-beta.1 - July 23, 2019
+
+- Adds server validation if `username` is included in the model, to validate ownership of that username. See [#19](https://github.com/blockstack-radiks/radiks-server/pull/19)
+
 ## 1.0.0-beta.3 - July 22nd, 2019
 
 - Adds configuration to automatically try reconnecting to MongoDB if the connection was destroyed
