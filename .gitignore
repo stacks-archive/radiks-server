@@ -3,3 +3,4 @@ package-lock.json
 typed/
 lib/
 !src/lib/
+app
