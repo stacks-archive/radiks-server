@@ -8,8 +8,11 @@ dotenv.config({
 });
 
 jest.mock('request-promise', () => options => {
-  const { models } = require('./mocks'); // eslint-disable-line
-  const { uri } = options;
+  const { models, users } = require('./mocks'); // eslint-disable-line
+  const { uri }: { uri: string } = options;
+  if (uri.startsWith('https://core.blockstack.org/v1/users')) {
+    return Promise.resolve(users[uri]);
+  }
   return Promise.resolve(models[uri]);
 });
 

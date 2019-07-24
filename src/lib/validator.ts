@@ -1,20 +1,24 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
+import request from 'request-promise';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
 
 class Validator {
-  private db: Collection;
+  public db: Collection;
 
-  private attrs: any;
+  public attrs: any;
 
-  private previous: any;
+  public previous: any;
 
-  constructor(db: Collection, attrs: any) {
+  public gaiaUrl?: string;
+
+  constructor(db: Collection, attrs: any, gaiaUrl?: string) {
     this.db = db;
     this.attrs = attrs;
+    this.gaiaUrl = gaiaUrl;
   }
 
   async validate() {
@@ -22,6 +26,7 @@ class Validator {
     await this.fetchPrevious();
     await this.validateSignature();
     await this.validatePrevious();
+    await this.validateUsername();
     return true;
   }
 
@@ -82,6 +87,42 @@ class Validator {
   validatePresent(key: string) {
     if (!this.attrs[key]) {
       errorMessage(`No '${key}' attribute, which is required.`);
+    }
+  }
+
+  async validateUsername(): Promise<boolean> {
+    if (!(this.attrs.username && this.gaiaUrl)) {
+      return true;
+    }
+    const gaiaUrls = await this.fetchProfileAppsGaiaUrls();
+    const gaiaPrefix = this.attrs.gaiaUrl.match(/(.*)\/[\d|[a-z]|-]*^/)[1];
+    const foundUrl = gaiaUrls.find((url) => url.startsWith(gaiaPrefix));
+
+    if (!foundUrl) {
+      return errorMessage('Username does not match provided Gaia URL');
+    }
+
+    return true;
+  }
+
+  /**
+   * Fetch all gaia URLs from the 'apps' object in this user's profile.json
+   */
+  private async fetchProfileAppsGaiaUrls(): Promise<string[]> {
+    const uri = `https://core.blockstack.org/v1/users/${this.attrs.username}`;
+    try {
+      const response = await request({
+        uri,
+        json: true,
+      });
+      const user = response[this.attrs.username];
+      if (user && user.profile && user.profile.apps) {
+        return Object.values(user.profile.apps);
+      }
+      return [];
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
 }

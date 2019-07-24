@@ -1,12 +1,13 @@
 import { makeECPrivateKey, getPublicKeyFromPrivate } from 'blockstack/lib/keys';
 import { signECDSA } from 'blockstack/lib/encryption';
+import { Db } from 'mongodb';
 import uuid from 'uuid/v4';
 import constants from '../src/lib/constants';
 
 export default class Signer {
-  private _id: string;
-  private privateKey: string;
-  private publicKey: string;
+  public _id: string;
+  public privateKey: string;
+  public publicKey: string;
 
   constructor(privateKey?: string) {
     this.privateKey = privateKey || makeECPrivateKey();
@@ -14,7 +15,7 @@ export default class Signer {
     this._id = uuid();
   }
 
-  save(db) {
+  save(db: Db) {
     const { _id, privateKey, publicKey } = this;
     return db.collection(constants.COLLECTION).insertOne({
       _id,
@@ -24,7 +25,7 @@ export default class Signer {
     });
   }
 
-  sign(doc) {
+  sign(doc: any) {
     const now = new Date().getTime();
     doc.updatedAt = now;
     doc.signingKeyId = doc.signingKeyId || this._id;

@@ -148,3 +148,41 @@ test('allows users to use personal signing key', async () => {
   const validator = new Validator(db.collection(constants.COLLECTION), user);
   expect(await validator.validate()).toEqual(true);
 });
+
+test.only('throws if username included and gaia URL not found in profile', async () => {
+  const model = {
+    ...models.withUsername,
+  };
+  model.gaiaUrl = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTF/${model._id}`;
+  const signer = new Signer();
+  const db = await getDB();
+  signer.sign(model);
+  await signer.save(db);
+  await db.collection(constants.COLLECTION).insertOne(model);
+  const validator = new Validator(
+    db.collection(constants.COLLECTION),
+    model,
+    model.gaiaUrl
+  );
+  await expect(validator.validate()).rejects.toThrow(
+    'Username does not match provided Gaia URL'
+  );
+});
+
+test.only('is valid if username included and gaia URL is found in profile', async () => {
+  const model = {
+    ...models.withUsername,
+  };
+  model.gaiaUrl = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${model._id}`;
+  const signer = new Signer();
+  const db = await getDB();
+  signer.sign(model);
+  await signer.save(db);
+  await db.collection(constants.COLLECTION).insertOne(model);
+  const validator = new Validator(
+    db.collection(constants.COLLECTION),
+    model,
+    model.gaiaUrl
+  );
+  expect(await validator.validate()).toEqual(true);
+});
