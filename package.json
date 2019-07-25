@@ -1,6 +1,6 @@
 {
   "name": "radiks-server",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "An express plugin for building a Radiks server",
   "main": "app/index.js",
   "types": "typed",

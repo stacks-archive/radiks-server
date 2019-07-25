@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 1.0.0-beta.3 - July 26th, 2019
+
+- Fix from @pradel around validating models before saving them. [#20](https://github.com/blockstack-radiks/radiks-server/pull/20)
+
 ## 1.0.0-beta.3 - July 22nd, 2019
 
 - Adds configuration to automatically try reconnecting to MongoDB if the connection was destroyed
