@@ -57,11 +57,11 @@ To install and run MongoDB, visit their [download page](https://www.mongodb.com/
 
 The easiest way to run radiks-server is to use the pre-packaged node.js server that is included with this npm package. To use it, first install `radiks-server`:
 
-~~~bash
+```bash
 npm install -g radiks-server
 # or, if you use yarn
 yarn global add radiks-server
-~~~
+```
 
 After installing, you can simply run `radiks-server` in the command line to start a server. It defaults to running on port `1260`, but you can use the `PORT` environment variable to modify this.
 
@@ -77,29 +77,29 @@ If you're using an [express.js](https://expressjs.com/) server to run your appli
 
 Radiks-server includes an easy-to-use middleware that you can include in your application:
 
-~~~javascript
+```javascript
 const express = require('express');
 
 const { setup } = require('radiks-server');
 
 const app = express();
 
-setup().then((RadiksController) => {
+setup().then(RadiksController => {
   app.use('/radiks', RadiksController);
 });
-~~~
+```
 
 The `setup` method returns a promise, and that promise resolves to the actual middleware that your server can use. This is because it first connects to MongoDB, and then sets up the middleware with that database connection.
 
 The `setup` function accepts an `options` object as the first argument. Right now, the only option supported is `mongoDBUrl`. If you aren't using environment variables, you can explicitly pass in a MongoDB URL here:
 
-~~~javascript
+```javascript
 setup({
-  mongoDBUrl: 'mongodb://localhost:27017/my-custom-database'
-}).then((RadiksController) => {
+  mongoDBUrl: 'mongodb://localhost:27017/my-custom-database',
+}).then(RadiksController => {
   app.use('/radiks', RadiksController);
 });
-~~~
+```
 
 ### Accessing the MongoDB Collection
 
@@ -107,21 +107,21 @@ setup({
 
 Radiks-server keeps all models inside of a collection. You can use the `getDB` function to access this collection. [See the MongoDB Collection reference](https://mongodb.github.io/node-mongodb-native/3.1/api/Collection.html) for documentation about how you can interact with this collection.
 
-~~~js
+```js
 const { getDB } = require('radiks-server');
 
 const mongo = await getDB(MONGODB_URL);
-~~~
+```
 
 #### Migration from Firebase (or anywhere else)
 
-Migrating data from Firebase to Radiks-server is simple and painless.  You can create a script file to fetch all the firebase data using their API.  Then, you can use your MONGOD_URI config to use the `mongodb` npm package.
+Migrating data from Firebase to Radiks-server is simple and painless. You can create a script file to fetch all the firebase data using their API. Then, you can use your MONGOD_URI config to use the `mongodb` npm package.
 
 ```js
 // Script for transfering users from Firebase to Radiks-server
 
 const { getDB } = require('radiks-server');
-const { mongoURI } = require('......') // How you import/require your mongoURI is up to you
+const { mongoURI } = require('......'); // How you import/require your mongoURI is up to you
 
 const migrate = async () => {
   // `mongo` is a reference to the MongoDB collection that radiks-server uses.
@@ -135,58 +135,59 @@ const migrate = async () => {
    * How you saved your user data will proably be different than the example below
    */
 
-   const users = {
-     "-LV1HAQToANRvhysSClr": {
-       "blockstackId": "1N1DzKgizU4rCEaxAU21EgMaHGB5hprcBM",
-       "username": "kkomaz.id"
-     }
-   }
+  const users = {
+    '-LV1HAQToANRvhysSClr': {
+      blockstackId: '1N1DzKgizU4rCEaxAU21EgMaHGB5hprcBM',
+      username: 'kkomaz.id',
+    },
+  };
 
-   const usersToInsert = Object.values(users).map((user) => {
-     const { username } = user;
-     const doc = {
-       username,
-       _id: username,
-       radiksType: 'BlockstackUser',
-     }
-     const op = {
-       updateOne: {
-         filter: {
-           _id: username,
-         },
-         update: {
-           $setOnInsert: doc
-         },
-         upsert: true,
-       }
-     }
-     return op;
-   });
+  const usersToInsert = Object.values(users).map(user => {
+    const { username } = user;
+    const doc = {
+      username,
+      _id: username,
+      radiksType: 'BlockstackUser',
+    };
+    const op = {
+      updateOne: {
+        filter: {
+          _id: username,
+        },
+        update: {
+          $setOnInsert: doc,
+        },
+        upsert: true,
+      },
+    };
+    return op;
+  });
 
-   await mongo.bulkWrite(usersToInsert);
+  await mongo.bulkWrite(usersToInsert);
+};
 
- }
-
- migrate().then(() => {
-   console.log('Done!');
-   process.exit();
- }).catch((error) => {
-   console.error(error);
-   process.exit();
- })
+migrate()
+  .then(() => {
+    console.log('Done!');
+    process.exit();
+  })
+  .catch(error => {
+    console.error(error);
+    process.exit();
+  });
 ```
 
 ### Options
 
 You can specify some options while initiating the Radiks server.
 
-~~~javascript
+```javascript
 const { setup } = require('radiks-server');
 
 setup({
-  ...myOptions
-})
-~~~
+  ...myOptions,
+});
+```
 
 Available options:
 
