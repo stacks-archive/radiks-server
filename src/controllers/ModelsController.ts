@@ -19,7 +19,7 @@ const makeModelsController = (
   const ModelsController = addAsync(express.Router());
   ModelsController.use(bodyParser.json());
 
-  ModelsController.post('/crawl', async (req, res) => {
+  ModelsController.postAsync('/crawl', async (req, res) => {
     const { gaiaURL } = req.body;
     const attrs = await request({
       uri: gaiaURL,
@@ -27,7 +27,7 @@ const makeModelsController = (
     });
     const validator = new Validator(radiksCollection, attrs);
     try {
-      validator.validate();
+      await validator.validate();
       await radiksCollection.save(attrs);
       emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
 
