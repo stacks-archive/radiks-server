@@ -1,8 +1,23 @@
 # Radiks-Server Changelog
 
+## 1.1.0-beta.3 - July 30, 2019
+
+- Fixed an issue with validating usernames
+
+## 0.2.0 - July 26th, 2019
+
+- All code from the `v1.0.0` betas has been made backwards compatible, so we're publishing these changes as `v0.2.0`.
+- Port to Typescript (Thanks [@pradel](https://github.com/pradel))
+- Automatically reconnect to MongoDB if the connection was closed
+- Fixed a bug around validating models before saving them
+
 ## 1.0.0-beta.3 - July 26th, 2019
 
 - Fix from @pradel around validating models before saving them. [#20](https://github.com/blockstack-radiks/radiks-server/pull/20)
+
+## 1.1.0-beta.1 - July 23, 2019
+
+- Adds server validation if `username` is included in the model, to validate ownership of that username. See [#19](https://github.com/blockstack-radiks/radiks-server/pull/19)
 
 ## 1.0.0-beta.3 - July 22nd, 2019
 
@@ -15,6 +30,10 @@
 ## 1.0.0-beta.1 - July 1st, 2019
 
 - Ported existing codebase to Typescript. Thanks to [@pradel](https://github.com/blockstack-radiks/radiks-server/pull/14)!
+
+## 0.1.13 - June 22, 2019
+
+- Fixed CORS error blocking DELETE requests
 
 ## 0.1.12 - June 9th, 2019
 

@@ -1,20 +1,24 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
+import request from 'request-promise';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
 
 class Validator {
-  private db: Collection;
+  public db: Collection;
 
-  private attrs: any;
+  public attrs: any;
 
-  private previous: any;
+  public previous: any;
 
-  constructor(db: Collection, attrs: any) {
+  public gaiaURL?: string;
+
+  constructor(db: Collection, attrs: any, gaiaURL?: string) {
     this.db = db;
     this.attrs = attrs;
+    this.gaiaURL = gaiaURL;
   }
 
   async validate() {
@@ -22,6 +26,7 @@ class Validator {
     await this.fetchPrevious();
     await this.validateSignature();
     await this.validatePrevious();
+    await this.validateUsername();
     return true;
   }
 
@@ -82,6 +87,52 @@ class Validator {
   validatePresent(key: string) {
     if (!this.attrs[key]) {
       errorMessage(`No '${key}' attribute, which is required.`);
+    }
+  }
+
+  /**
+   * If a username is included in the model attributes, then validate that
+   * the model was created by the owner of the username. This is done by matching
+   * the Gaia URL to any Gaia URL in that user's profile.json
+   */
+  async validateUsername(): Promise<boolean> {
+    if (!(this.attrs.username && this.gaiaURL)) {
+      return true;
+    }
+    const gaiaAddresses = await this.fetchProfileGaiaAddresses();
+    const gaiaAddressParts = this.gaiaURL.split('/');
+    const gaiaAddress = gaiaAddressParts[gaiaAddressParts.length - 3];
+    const foundUrl = gaiaAddresses.find((address) => address === gaiaAddress);
+
+    if (!foundUrl) {
+      return errorMessage('Username does not match provided Gaia URL');
+    }
+
+    return true;
+  }
+
+  /**
+   * Fetch all gaia addresses from the 'apps' object in this user's profile.json
+   */
+  private async fetchProfileGaiaAddresses(): Promise<string[]> {
+    const uri = `https://core.blockstack.org/v1/users/${this.attrs.username}`;
+    try {
+      const response = await request({
+        uri,
+        json: true,
+      });
+      const user = response[this.attrs.username];
+      if (user && user.profile && user.profile.apps) {
+        const urls: string[] = Object.values(user.profile.apps);
+        return urls.map((url) => {
+          const parts = url.split('/');
+          return parts[parts.length - 2];
+        });
+      }
+      return [];
+    } catch (error) {
+      console.error(error);
+      return [];
     }
   }
 }
