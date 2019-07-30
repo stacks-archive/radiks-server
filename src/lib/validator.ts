@@ -101,7 +101,7 @@ class Validator {
     }
     const gaiaAddresses = await this.fetchProfileGaiaAddresses();
     const gaiaAddressParts = this.gaiaURL.split('/');
-    const gaiaAddress = gaiaAddressParts[gaiaAddressParts.length - 2];
+    const gaiaAddress = gaiaAddressParts[gaiaAddressParts.length - 3];
     const foundUrl = gaiaAddresses.find((address) => address === gaiaAddress);
 
     if (!foundUrl) {

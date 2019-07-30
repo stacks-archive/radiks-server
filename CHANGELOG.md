@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 1.1.0-beta.3 - July 30, 2019
+
+- Fixed an issue with validating usernames
+
 ## 0.2.0 - July 26th, 2019
 
 - All code from the `v1.0.0` betas has been made backwards compatible, so we're publishing these changes as `v0.2.0`.

@@ -153,7 +153,7 @@ test('throws if username included and gaia URL not found in profile', async () =
   const model = {
     ...models.withUsername,
   };
-  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTF/${model._id}`;
+  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTF/ModelName/${model._id}`;
   const signer = new Signer();
   const db = await getDB();
   signer.sign(model);
@@ -173,7 +173,7 @@ test('is valid if username included and gaia URL is found in profile', async () 
   const model = {
     ...models.withUsername,
   };
-  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/${model._id}`;
+  model.gaiaURL = `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/ModelName/${model._id}`;
   const signer = new Signer();
   const db = await getDB();
   signer.sign(model);
