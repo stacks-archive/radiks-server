@@ -2,7 +2,7 @@
 
 const express = require('express');
 
-const { setup } = require('../lib/index');
+const { setup } = require('../app/index');
 
 const run = () => {
   setup()
