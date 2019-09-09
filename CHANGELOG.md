@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 0.2.1 - September 9th, 2019
+
+- Fixes the `radiks-server` bin command, [#16](https://github.com/blockstack-radiks/radiks-server/issues/16)
+
 ## 0.2.0 - July 26th, 2019
 
 - All code from the `v1.0.0` betas has been made backwards compatible, so we're publishing these changes as `v0.2.0`.
