@@ -87,21 +87,21 @@ In the future, Radiks-server will support various different databases, but right
 
 7. Configure your application to use your `radiks-server`.
   
-  To configure your applciation as a `radiks` client, use code that looks like this when starting up your application:
+    To configure your applciation as a `radiks` client, use code that looks like this when starting up your application:
 
-  ```js
-  import { UserSession, AppConfig } from 'blockstack';
-  import { configure } from 'radiks';
+    ```js
+     import { UserSession, AppConfig } from 'blockstack';
+     import { configure } from 'radiks';
 
-  const userSession = new UserSession({
-    appConfig: new AppConfig(['store_write', 'publish_data'])
-  })
+     const userSession = new UserSession({
+       appConfig: new AppConfig(['store_write', 'publish_data'])
+     })
 
-  configure({
-    apiServer: 'http://my-radiks-server.com',
-    userSession
-  });
-  ```
+     configure({
+       apiServer: 'http://my-radiks-server.com',
+       userSession
+     });
+    ```
 
   For information on configuring a client, see [Authentication](https://github.com/blockstack-radiks/radiks#configuration) on the client repo.
 
