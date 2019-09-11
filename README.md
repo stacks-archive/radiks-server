@@ -85,7 +85,25 @@ In the future, Radiks-server will support various different databases, but right
 
    The `radiks-server` defaults to running on port `1260`, but you can use the `PORT` environment variable to modify this.
 
-7. Add the the radiks-server to your application's [UserSession](https://blockstack.github.io/blockstack.js/classes/appconfig.html) configuration.
+7. Configure your application to use your `radiks-server`.
+  
+  To configure your applciation as a `radiks` client, use code that looks like this when starting up your application:
+
+  ```js
+  import { UserSession, AppConfig } from 'blockstack';
+  import { configure } from 'radiks';
+
+  const userSession = new UserSession({
+    appConfig: new AppConfig(['store_write', 'publish_data'])
+  })
+
+  configure({
+    apiServer: 'http://my-radiks-server.com',
+    userSession
+  });
+  ```
+
+  For information on configuring a client, see [Authentication](https://github.com/blockstack-radiks/radiks#configuration) on the client repo.
 
 8. Build and run your application.
 
