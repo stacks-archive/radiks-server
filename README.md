@@ -54,7 +54,7 @@ In the future, Radiks-server will support various different databases, but right
 
    **You must use MongoDB >=3.6, because they fixed an issue with naming patterns in keys.**
 
-   If you are testing on a local workstation, you can install locally or us a `docker` image.  To install, visit their [download page](https://www.mongodb.com/download-center/community). You can also download MongoDB using your favorite package manager. On Mac OS, [homebrew is recommended](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition-with-homebrew).
+   If you are testing on a local workstation, you can install locally or use a `docker` image.  To install, visit their [download page](https://www.mongodb.com/download-center/community). You can also download MongoDB using your favorite package manager. On Mac OS, [homebrew is recommended](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition-with-homebrew).
 
 2. On your MongoDB instance, create a database for your application data.
   
