@@ -4,18 +4,17 @@
 
 <!-- TOC depthFrom:2 -->
 
-- [Introduction](#introduction)
-  - [Privacy](#privacy)
-  - [Multi-user scenarios](#multi-user-scenarios)
-  - [Authorization](#authorization)
-- [Usage](#usage)
-  - [Built-in CLI Server](#built-in-cli-server)
-  - [Specifying the MongoDB URL](#specifying-the-mongodb-url)
-  - [Running a custom Radiks-server](#running-a-custom-radiks-server)
-  - [Options](#options)
-  - [Accessing the MongoDB Collection](#accessing-the-mongodb-collection)
-    - [Using `getDB` to manually connecting to the MongoDB collection](#using-getdb-to-manually-connecting-to-the-mongodb-collection)
-    - [Migration from Firebase (or anywhere else)](#migration-from-firebase-or-anywhere-else)
+- [radiks-server](#radiks-server)
+  - [Introduction](#introduction)
+    - [Privacy](#privacy)
+    - [Multi-user scenarios](#multi-user-scenarios)
+    - [Authorization](#authorization)
+  - [Use with built-in CLI server](#use-with-built-in-cli-server)
+    - [Running a custom Radiks-server](#running-a-custom-radiks-server)
+    - [Accessing the MongoDB Collection](#accessing-the-mongodb-collection)
+      - [Using `getDB` to manually connecting to the MongoDB collection](#using-getdb-to-manually-connecting-to-the-mongodb-collection)
+      - [Migration from Firebase (or anywhere else)](#migration-from-firebase-or-anywhere-else)
+    - [Options](#options)
 
 <!-- /TOC -->
 
@@ -45,31 +44,47 @@ Radiks.js creates and manages 'signing keys' that it uses to sign all writes tha
 
 Radiks-server also is built to support writes in a collaborative, but private, situation. For example, consider a collaborative document editing application, where users can create 'organizations' and invite users to that organization. All users in that organization have read and write priveleges to data related to that organization. These organizations have single 'shared key' that is used to sign and encrypt data. When an organization administrator needs to remove a user from the group, they'll revoke a previous key and create a new one. Radiks is aware of these relationships, and will only support writes that are signed with the current active key related to a group.
 
-## Usage
+## Use with built-in CLI server
 
-Radiks-server is a node.js application that uses [MongoDB](https://www.mongodb.com/) as an underlying database. In the future, Radiks-server will support various different databases, but right now only MongoDB is supported.
+Radiks-server is a `node.js` application that uses [MongoDB](https://www.mongodb.com/) as an underlying database. The easiest way to run `radiks-server` is to use the pre-packaged `node.js` server that is included with this `npm` package. 
 
-To install and run MongoDB, visit their [download page](https://www.mongodb.com/download-center/community). You can also download MongoDB using your favorite package manager. On Mac OS, [homebrew is recommended](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition-with-homebrew).
+In the future, Radiks-server will support various different databases, but right now only MongoDB is supported. 
 
-**You must use MongoDB >=3.6, because they fixed an issue with naming patterns in keys.**
+1. Install and run MongoDB 3.6 or higher.
 
-### Built-in CLI Server
+   **You must use MongoDB >=3.6, because they fixed an issue with naming patterns in keys.**
 
-The easiest way to run radiks-server is to use the pre-packaged node.js server that is included with this npm package. To use it, first install `radiks-server`:
+   If you are testing on a local workstation, you can install locally or us a `docker` image.  To install, visit their [download page](https://www.mongodb.com/download-center/community). You can also download MongoDB using your favorite package manager. On Mac OS, [homebrew is recommended](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/#install-mongodb-community-edition-with-homebrew).
 
-```bash
-npm install -g radiks-server
-# or, if you use yarn
-yarn global add radiks-server
-```
+2. On your MongoDB instance, create a database for your application data.
+  
+3. Create a username/password combination with `root` privileges on your new database.
 
-After installing, you can simply run `radiks-server` in the command line to start a server. It defaults to running on port `1260`, but you can use the `PORT` environment variable to modify this.
+4. Install the `radiks-server` on a workstation or server.
 
-### Specifying the MongoDB URL
+    ```bash
+    npm install -g radiks-server
+    # or, if you use yarn
+    yarn global add radiks-server
+    ```
+5. Create an `MONGODB_URI` environment variable on the same machine where you are running the `radiks-server`.
 
-In addition to the `PORT` environment variable, you can configure where your MongoDB server is running with the `MONGODB_URL` environment variable.
+   Use the `mongodb://username:password@host:port/db_name` format for your variable. For example, to set this variable in a `bash` shell:
 
-By default, Radiks-server will use `'mongodb://localhost:27017/radiks-server'` as the MongoDB URL. This is suitable for local environments, but in production, you'll want to change the hostname and possible the database name.
+   ```bash
+   export MONGODB_URI="mongodb://admin:mongome@157.245.167.8:27017/mycoolapp"
+   ```
+
+   The default port for Mongodb is `27017`, your instance may be configured differently.  By default, Radiks-server will use `'mongodb://localhost:27017/radiks-server'` as the `MONGODB_URI` value. This is suitable for local testing, but in production, you'll want to change the hostname and possible the database name.
+
+6. Run `radiks-server` in the command line to start a server. 
+
+   The `radiks-server` defaults to running on port `1260`, but you can use the `PORT` environment variable to modify this.
+
+7. Add the the radiks-server to your application's [UserSession](https://blockstack.github.io/blockstack.js/classes/appconfig.html) configuration.
+
+8. Build and run your application.
+
 
 ### Running a custom Radiks-server
 
