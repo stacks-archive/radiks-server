@@ -103,7 +103,7 @@ In the future, Radiks-server will support various different databases, but right
      });
     ```
  
-   For more information on configuring and writing a Radiks a client application, see https://github.com/blockstack-radiks/radiks#configuration. 
+   For more information on configuring and writing a Radiks a client application, see [the Radiks client](https://github.com/blockstack-radiks/radiks) repository. 
 
 8. Build and run your application.
 
