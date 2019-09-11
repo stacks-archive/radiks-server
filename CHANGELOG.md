@@ -1,5 +1,9 @@
 # Radiks-Server Changelog
 
+## 0.2.2 - September 11th, 2019
+
+- README updates, thanks @moxiegirl! [#25](https://github.com/blockstack-radiks/radiks-server/pull/25)
+
 ## 0.2.1 - September 9th, 2019
 
 - Fixes the `radiks-server` bin command, [#16](https://github.com/blockstack-radiks/radiks-server/issues/16)
