@@ -1,5 +1,13 @@
 # Radiks-Server Changelog
 
+## 0.2.3 - September 11th, 2019
+
+- Dependency updates from @dependabot:
+  - [#17](https://github.com/blockstack-radiks/radiks-server/pull/17)
+  - [#18](https://github.com/blockstack-radiks/radiks-server/pull/18)
+  - [#23](https://github.com/blockstack-radiks/radiks-server/pull/23)
+  - [#24](https://github.com/blockstack-radiks/radiks-server/pull/24)
+
 ## 0.2.2 - September 11th, 2019
 
 - README updates, thanks @moxiegirl! [#25](https://github.com/blockstack-radiks/radiks-server/pull/25)
