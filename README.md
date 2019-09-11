@@ -64,9 +64,13 @@ In the future, Radiks-server will support various different databases, but right
 
     ```bash
     npm install -g radiks-server
-    # or, if you use yarn
+    ```
+    Or, if you prefer `yarn`:
+
+    ```bash
     yarn global add radiks-server
     ```
+
 5. Create an `MONGODB_URI` environment variable on the same machine where you are running the `radiks-server`.
 
    Use the `mongodb://username:password@host:port/db_name` format for your variable. For example, to set this variable in a `bash` shell:
