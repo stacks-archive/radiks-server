@@ -102,8 +102,8 @@ In the future, Radiks-server will support various different databases, but right
        userSession
      });
     ```
-
-  For information on configuring a client, see [Authentication](https://github.com/blockstack-radiks/radiks#configuration) on the client repo.
+ 
+   For information on configuring a client, see [Authentication](https://github.com/blockstack-radiks/radiks#configuration) on the client repo.
 
 8. Build and run your application.
 
