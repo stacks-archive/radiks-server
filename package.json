@@ -15,7 +15,7 @@
     "compile-watch": "babel src -d app --watch --extensions '.ts,.js'",
     "typescript": "tsc",
     "prettier": "prettier --write '**/*.{ts,tsx,json}'",
-    "eslint": "eslint 'src/**/*'",
+    "eslint": "eslint 'src/**/*' 'test/**/*' --ext .ts",
     "test": "jest --verbose=true --ci --runInBand test/",
     "test-watch": "jest --verbose=true --ci --runInBand --watch test/",
     "prepublishOnly": "yarn build"

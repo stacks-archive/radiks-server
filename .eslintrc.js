@@ -9,6 +9,10 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    project: {
+      extends: './tsconfig.json',
+      include: ['src/**/*', 'test/**/*'],
+    },
   },
   env: {
     'jest/globals': true,

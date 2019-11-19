@@ -1,5 +1,6 @@
 import '../setup';
 import request from 'supertest';
+import { Express } from 'express';
 import { signECDSA } from 'blockstack/lib/encryption';
 import { makeECPrivateKey } from 'blockstack/lib/keys';
 import getApp from '../test-server';
@@ -12,6 +13,7 @@ jest.mock(
   '../../src/lib/validator',
   () =>
     class FakeValidator {
+      // eslint-disable-next-line class-methods-use-this
       validate() {
         return true;
       }
@@ -44,7 +46,7 @@ test('it can save the same model twice', async () => {
   expect(response.body.success).toEqual(true);
 });
 
-const getDocs = async (app, query) => {
+const getDocs = async (app: Express, query: any) => {
   const req = request(app)
     .get('/radiks/models/find')
     .query(query);

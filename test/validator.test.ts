@@ -159,7 +159,6 @@ test('doesnt allow updating if updatedAt hasnt changed', async () => {
   signer.sign(model);
   let validator = new Validator(db.collection(constants.COLLECTION), model);
   expect(await validator.validate()).toBe(true);
-  const oldUpdatedAt = model.updatedAt;
   await db.collection(constants.COLLECTION).insertOne(model);
   validator = new Validator(db.collection(constants.COLLECTION), model);
   await expect(validator.validate()).rejects.toThrow(
