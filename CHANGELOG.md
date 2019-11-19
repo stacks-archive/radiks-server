@@ -1,5 +1,11 @@
 # Radiks-Server Changelog
 
+## 0.3.0-beta.1 - November 18th, 2019
+
+Fixes for [#29](https://github.com/blockstack/radiks-server/issues/29)
+
+Radiks-server was not properly validating the `updatedAt` attribute for model updates and deletes. This could potentially lead to signature jacking. Radiks-server now validated that the `updatedAt` field is greater than previous `updatedAt`s. This acts similarly to an `nonce` in blockchains.
+
 ## 0.2.3 - September 11th, 2019
 
 - Dependency updates from @dependabot:
