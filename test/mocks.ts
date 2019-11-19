@@ -4,7 +4,19 @@ import constants from '../src/lib/constants';
 
 const userGroupId = faker.random.uuid();
 
-const models = {
+interface MockModel {
+  _id: string;
+  updatedAt?: number;
+  createdAt?: number;
+  signingKeyId?: string;
+  [key: string]: any;
+}
+
+interface Models {
+  [key: string]: MockModel;
+}
+
+const models: Models = {
   test1: {
     name: faker.name.findName(),
     email: faker.internet.email(),
