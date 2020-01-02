@@ -5,6 +5,7 @@ export const getDB = async (url?: string): Promise<Db> => {
     url || process.env.MONGODB_URI || 'mongodb://localhost:27017/radiks-server';
   const client = new MongoClient(_url, {
     useNewUrlParser: true,
+    useUnifiedTopology:true,
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 1000, // every 1 second
   });
