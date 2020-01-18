@@ -66,7 +66,7 @@ const makeModelsController = (
     //A custom route for complex search since we can't use queryToMongo
     const query = req.body;
     const options = { limit: req.query.limit, offset: req.query.offset };
-
+    //we keep the same code here but use the radiksCollection
     const cursor = radiksCollection.find(query, options);
     const results = await cursor.toArray();
     const total = await cursor.count();
