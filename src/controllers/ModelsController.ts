@@ -62,6 +62,25 @@ const makeModelsController = (
     });
   });
 
+  ModelsController.getAsync('/advancedSearch', async (req, res) => {
+    //A custom route for complex search since we can't use queryToMongo
+    const query = req.body;
+    const options = { limit: req.query.limit, offset: req.query.offset };
+
+    const cursor = radiksCollection.find(query, options);
+    const results = await cursor.toArray();
+    const total = await cursor.count();
+
+    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
+    const pageLinks = mongo.links(fullUrl.split('?')[0], total);
+
+    res.json({
+      ...pageLinks,
+      total,
+      results,
+    });
+  });
+
   ModelsController.getAsync('/count', async (req, res) => {
     const mongo = queryToMongo(req.query, {
       maxLimit: config.maxLimit,
