@@ -90,6 +90,34 @@ test('it includes pagination links', async () => {
   expect(response.body.total).not.toBeFalsy();
 });
 
+const getDocsByComplexCriteria = async (app, query, criteria) => {
+  const req = request(app)
+    .post('/radiks/models/query')
+    .query(query)
+    .send(criteria);
+  const response = await req;
+  const { results } = response.body;
+  return results;
+};
+
+test('it can query with complex criteria', async () => {
+  const app = await getApp();
+  await saveAll();
+  const query = {
+    limit: 3,
+  };
+  const criteria = {
+    $or: [
+      {
+        name: 'hank stoever',
+      },
+      { email: { $exists: true } },
+    ],
+  };
+  const results = await getDocsByComplexCriteria(app, query, criteria);
+  expect(results.length).toEqual(2);
+});
+
 test('it can delete a model', async () => {
   const app = await getApp();
   const model = { ...models.test1 };

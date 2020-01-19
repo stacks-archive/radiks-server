@@ -62,20 +62,16 @@ const makeModelsController = (
     });
   });
 
-  ModelsController.getAsync('/advancedSearch', async (req, res) => {
-    //A custom route for complex search since we can't use queryToMongo
+  ModelsController.postAsync('/query', async (req, res) => {
     const query = req.body;
-    const options = { limit: req.query.limit, offset: req.query.offset };
-    //we keep the same code here but use the radiksCollection
+    const limit = Math.min(Number(req.query.limit), config.maxLimit);
+    const options = { limit, offset: req.query.offset };
     const cursor = radiksCollection.find(query, options);
+
     const results = await cursor.toArray();
     const total = await cursor.count();
 
-    const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-    const pageLinks = mongo.links(fullUrl.split('?')[0], total);
-
     res.json({
-      ...pageLinks,
       total,
       results,
     });
