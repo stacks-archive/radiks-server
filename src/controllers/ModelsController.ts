@@ -77,21 +77,20 @@ const makeModelsController = (
     });
   });
 
-  ModelsController.getAsync('/search/:search', async (req, res) => {
+  ModelsController.getAsync('/search', async (req, res) => {
     //A complex search query that returns the entered params of the search without using query-to-mongo
-    const { search } = req.params;
+    const { search } = req.body;
+    const mongo = queryToMongo(search, {
+      maxLimit: config.maxLimit,
+    });
     const options = { limit: req.query.limit, offset: req.query.offset };
-    // const mongo = queryToMongo(req.query.path, {
-    //   maxLimit: config.maxLimit,
-    // });
 
     const cursor = radiksCollection.find(search, options);
     const results = await cursor.toArray();
     const total = await cursor.count();
 
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
-    //declare the search params to be returned
-    const pageLinks = search.links(fullUrl.split('?')[0], total);
+    const pageLinks = mongo.links(fullUrl.split('?')[0], total);
 
     res.json({
       ...pageLinks,
