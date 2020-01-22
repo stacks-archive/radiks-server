@@ -7,6 +7,7 @@ import { models, saveAll } from '../mocks';
 import Signer from '../signer';
 import getDB from '../db';
 import constants from '../../src/lib/constants';
+import qs from 'qs';
 
 jest.mock(
   '../../src/lib/validator',
@@ -45,9 +46,10 @@ test('it can save the same model twice', async () => {
 });
 
 const getDocs = async (app, query) => {
+  const queryStr = qs.stringify(query, { encode: false });
   const req = request(app)
     .get('/radiks/models/find')
-    .query(query);
+    .query(queryStr);
   const response = await req;
   const { results } = response.body;
   return results;
@@ -79,6 +81,20 @@ test('it can query with options', async () => {
   expect(results.length).toEqual(1);
 });
 
+test('it can make advanced query with options', async () => {
+  const app = await getApp();
+  await saveAll();
+  const query = {
+    $or: [{ name: { $regex: 'k sto' } }, { email: 'hehe@gmail.com' }],
+    name: {
+      $exists: true,
+    },
+    limit: 1,
+  };
+  const results = await getDocs(app, query);
+  expect(results.length).toEqual(1);
+});
+
 test('it includes pagination links', async () => {
   const app = await getApp();
   await saveAll();
@@ -87,6 +103,17 @@ test('it includes pagination links', async () => {
     .query({ limit: 1 });
   expect(response.body.next).not.toBeFalsy();
   expect(response.body.last).not.toBeFalsy();
+  expect(response.body.total).not.toBeFalsy();
+});
+
+test('it includes pagination links (prev and first)', async () => {
+  const app = await getApp();
+  await saveAll();
+  const response = await request(app)
+    .get('/radiks/models/find')
+    .query({ limit: 1, offset: 6 });
+  expect(response.body.first).not.toBeFalsy();
+  expect(response.body.prev).not.toBeFalsy();
   expect(response.body.total).not.toBeFalsy();
 });
 
