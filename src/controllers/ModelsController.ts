@@ -38,7 +38,7 @@ const makeModelsController = (
       console.error(error);
       res.status(400).json({
         success: false,
-        message: error.message,
+        message: error.message+ ', Could not Crawl the GAIA URL provided',
       });
     }
   });
@@ -99,6 +99,7 @@ const makeModelsController = (
   });
 
   ModelsController.deleteAsync('/:id', async (req, res) => {
+    let errors = ''
     try {
       const attrs = await radiksCollection.findOne({ _id: req.params.id });
       const { publicKey } = await radiksCollection.findOne<any>({
@@ -114,11 +115,12 @@ const makeModelsController = (
       }
     } catch (error) {
       console.error(error);
+      errors = error;
     }
 
     return res.json({
       success: false,
-      error: 'Invalid signature',
+      error: 'Invalid signature: '+ errors
     });
   });
 

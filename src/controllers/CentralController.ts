@@ -31,6 +31,7 @@ export default (
     }
     return res.status(400).json({
       success: false,
+      error: 'Invalid provided signature'
     });
   });
 
@@ -46,7 +47,7 @@ export default (
       const value = await centralCollection.findOne({ _id });
       return res.json(value);
     }
-    return res.status(400).json({ success: false });
+    return res.status(400).json({ success: false, error: 'Invalid provided signature' });
   });
 
   return CentralController;
