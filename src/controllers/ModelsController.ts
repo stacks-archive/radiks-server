@@ -11,10 +11,13 @@ import { Config } from '../types';
 import Validator from '../lib/validator';
 import constants from '../lib/constants';
 
-const queryToMongo = (query, { maxLimit }) => {
-  let { limit, offset, sort, ...criteria } = query;
-  limit = Number(limit) || maxLimit;
-  offset = Number(offset) || 0;
+export const queryToMongo = (
+  query: { limit: number; offset: number; sort: any; criteria: any },
+  { maxLimit }: { maxLimit: number }
+) => {
+  const { limit: userLimit, offset: userOffset, sort, ...criteria } = query;
+  const limit = Number(userLimit) || maxLimit;
+  const offset = Number(userOffset) || 0;
 
   return {
     options: {
@@ -25,23 +28,29 @@ const queryToMongo = (query, { maxLimit }) => {
     criteria: {
       ...criteria,
     },
-    links(url, totalCount) {
-      let links = {},
-        last = {};
-      limit = Math.min(limit, totalCount);
+    links(url: string, totalCount: number) {
+      const links: {
+        prev?: string;
+        next?: string;
+        first?: string;
+        last?: string;
+        pages?: number;
+        offset?: number;
+      } = {};
+      const safeLimit = Math.min(limit, totalCount);
 
-      const getLinkWithOffset = offset =>
-        `${url}?${stringify({ ...query, offset })}`;
+      const getLinkWithOffset = (offsetForLink: number): string =>
+        `${url}?${stringify({ ...query, offset: offsetForLink })}`;
 
       if (offset > 0) {
-        links.prev = getLinkWithOffset(Math.max(offset - limit, 0));
+        links.prev = getLinkWithOffset(Math.max(offset - safeLimit, 0));
         links.first = getLinkWithOffset(0);
       }
-      if (offset + limit < totalCount) {
-        last.pages = Math.ceil(totalCount / limit);
-        last.offset = (last.pages - 1) * limit;
-        links.next = getLinkWithOffset(Math.min(offset + limit, last.offset));
-        links.last = getLinkWithOffset(last.offset);
+      if (offset + safeLimit < totalCount) {
+        const pages = Math.ceil(totalCount / safeLimit);
+        const newOffset = (pages - 1) * safeLimit;
+        links.next = getLinkWithOffset(Math.min(offset + safeLimit, newOffset));
+        links.last = getLinkWithOffset(newOffset);
       }
       return links;
     },
