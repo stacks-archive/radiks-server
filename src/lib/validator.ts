@@ -1,6 +1,7 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
 import request from 'request-promise';
+import CoreNodeCache from './coreNodeCache';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
@@ -15,10 +16,13 @@ class Validator {
 
   public gaiaURL?: string;
 
-  constructor(db: Collection, attrs: any, gaiaURL?: string) {
+  public coreNodeCache?: CoreNodeCache;
+
+  constructor(db: Collection, attrs: any, gaiaURL?: string, cache?: CoreNodeCache) {
     this.db = db;
     this.attrs = attrs;
     this.gaiaURL = gaiaURL;
+    this.coreNodeCache = cache;
   }
 
   async validate() {
@@ -121,10 +125,11 @@ class Validator {
   private async fetchProfileGaiaAddresses(): Promise<string[]> {
     const uri = `https://core.blockstack.org/v1/users/${this.attrs.username}`;
     try {
-      const response = await request({
+      const options = {
         uri,
         json: true,
-      });
+      };
+      const response = this.coreNodeCache ? await this.coreNodeCache.request(options): await request(options);
       const user = response[this.attrs.username];
       if (user && user.profile && user.profile.apps) {
         const urls: string[] = Object.values(user.profile.apps);
