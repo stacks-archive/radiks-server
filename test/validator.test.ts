@@ -6,7 +6,7 @@ import Signer from './signer';
 import constants from '../src/lib/constants';
 import Validator from '../src/lib/validator';
 
-test('it validates new models', async () => {
+test('it validates new models (not requiring a gaiaURL)', async () => {
   const signer = new Signer();
   const db = await getDB();
   await signer.save(db);
@@ -145,7 +145,11 @@ test('allows users to use personal signing key', async () => {
   const signer = new Signer(privateKey);
   const db = await getDB();
   signer.sign(user);
-  const validator = new Validator(db.collection(constants.COLLECTION), user);
+  const validator = new Validator(
+    db.collection(constants.COLLECTION),
+    user,
+    `https://gaia.blockstack.org/hub/1Me8MbfjnNEeK5MWGokVM6BLy9UbBf7kTD/User/${user.username}`
+  );
   expect(await validator.validate()).toEqual(true);
 });
 
@@ -166,6 +170,21 @@ test('throws if username included and gaia URL not found in profile', async () =
   );
   await expect(validator.validate()).rejects.toThrow(
     'Username does not match provided Gaia URL'
+  );
+});
+
+test('throws if username included and gaia URL not provided', async () => {
+  const model = {
+    ...models.withUsername,
+  };
+  const signer = new Signer();
+  const db = await getDB();
+  signer.sign(model);
+  await signer.save(db);
+  await db.collection(constants.COLLECTION).insertOne(model);
+  const validator = new Validator(db.collection(constants.COLLECTION), model);
+  await expect(validator.validate()).rejects.toThrow(
+    `No 'gaiaURL' attribute, which is required for models with usernames.`
   );
 });
 
