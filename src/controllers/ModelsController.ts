@@ -25,7 +25,7 @@ const makeModelsController = (
       uri: gaiaURL,
       json: true,
     });
-    const validator = new Validator(radiksCollection, attrs, gaiaURL, cache);
+    const validator = new Validator(radiksCollection, attrs, gaiaURL);
     try {
       await validator.validate();
       await radiksCollection.save(attrs);

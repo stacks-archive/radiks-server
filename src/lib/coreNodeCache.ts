@@ -1,5 +1,4 @@
 import requestPromise from 'request-promise';
-import { UriOptions } from 'request';
 
 /**
  * LRU cache for responses of calls to core node
@@ -12,7 +11,6 @@ class CoreNodeCache {
 
   async request(options:{uri:string, json:boolean}): Promise<any> {
     const cachedResult: any = this.get(options.uri);
-
     if (cachedResult ) {
       return cachedResult;
     }

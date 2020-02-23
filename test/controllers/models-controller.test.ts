@@ -36,11 +36,11 @@ test('it can save the same model twice', async () => {
   const app = await getApp();
   let response = await request(app)
     .post('/radiks/models/crawl')
-    .send({ gaiaURL: 'test1' });
+    .send({ gaiaURL: 'withUsername' });
   expect(response.body.success).toEqual(true);
   response = await request(app)
     .post('/radiks/models/crawl')
-    .send({ gaiaURL: 'test1' });
+    .send({ gaiaURL: 'withUsername' });
   expect(response.body.success).toEqual(true);
 });
 

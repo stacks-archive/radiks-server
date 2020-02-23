@@ -7,6 +7,8 @@ const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
 
+const cache = new CoreNodeCache();
+
 class Validator {
   public db: Collection;
 
@@ -16,13 +18,10 @@ class Validator {
 
   public gaiaURL?: string;
 
-  public coreNodeCache?: CoreNodeCache;
-
-  constructor(db: Collection, attrs: any, gaiaURL?: string, cache?: CoreNodeCache) {
+  constructor(db: Collection, attrs: any, gaiaURL?: string) {
     this.db = db;
     this.attrs = attrs;
     this.gaiaURL = gaiaURL;
-    this.coreNodeCache = cache;
   }
 
   async validate() {
@@ -129,7 +128,7 @@ class Validator {
         uri,
         json: true,
       };
-      const response = this.coreNodeCache ? await this.coreNodeCache.request(options): await request(options);
+      const response = await cache.request(options);
       const user = response[this.attrs.username];
       if (user && user.profile && user.profile.apps) {
         const urls: string[] = Object.values(user.profile.apps);
