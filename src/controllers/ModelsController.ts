@@ -1,15 +1,52 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import request from 'request-promise';
-import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
 import { verifyECDSA } from 'blockstack/lib/encryption/ec';
 import { Collection } from 'mongodb';
 import EventEmitter from 'wolfy87-eventemitter';
+import { stringify } from 'qs';
 
 import { Config } from '../types';
 import Validator from '../lib/validator';
 import constants from '../lib/constants';
+
+const queryToMongo = (query, { maxLimit }) => {
+  let { limit, offset, sort, ...criteria } = query;
+  limit = Number(limit) || maxLimit;
+  offset = Number(offset) || 0;
+
+  return {
+    options: {
+      limit,
+      offset,
+      sort,
+    },
+    criteria: {
+      ...criteria,
+    },
+    links(url, totalCount) {
+      let links = {},
+        last = {};
+      limit = Math.min(limit, totalCount);
+
+      const getLinkWithOffset = offset =>
+        `${url}?${stringify({ ...query, offset })}`;
+
+      if (offset > 0) {
+        links.prev = getLinkWithOffset(Math.max(offset - limit, 0));
+        links.first = getLinkWithOffset(0);
+      }
+      if (offset + limit < totalCount) {
+        last.pages = Math.ceil(totalCount / limit);
+        last.offset = (last.pages - 1) * limit;
+        links.next = getLinkWithOffset(Math.min(offset + limit, last.offset));
+        links.last = getLinkWithOffset(last.offset);
+      }
+      return links;
+    },
+  };
+};
 
 const makeModelsController = (
   radiksCollection: Collection,
