@@ -96,8 +96,11 @@ class Validator {
    * the Gaia URL to any Gaia URL in that user's profile.json
    */
   async validateUsername(): Promise<boolean> {
-    if (!(this.attrs.username && this.gaiaURL)) {
+    if (!(this.attrs.username)) {
       return true;
+    }
+    if (!(this.gaiaURL)) {
+      return errorMessage(`No 'gaiaURL' attribute, which is required for models with usernames.`);
     }
     const gaiaAddresses = await this.fetchProfileGaiaAddresses();
     const gaiaAddressParts = this.gaiaURL.split('/');
