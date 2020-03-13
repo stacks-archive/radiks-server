@@ -1,10 +1,13 @@
 import { Collection } from 'mongodb';
 import { verifyECDSA } from 'blockstack/lib/encryption';
 import request from 'request-promise';
+import CoreNodeCache from './coreNodeCache';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);
 };
+
+const cache = new CoreNodeCache();
 
 class Validator {
   public db: Collection;
@@ -96,7 +99,7 @@ class Validator {
    * the Gaia URL to any Gaia URL in that user's profile.json
    */
   async validateUsername(): Promise<boolean> {
-    if (!(this.attrs.username)) {
+    if (!(this.attrs.username) || (this.attrs.usernameUnverified)) {
       return true;
     }
     if (!(this.gaiaURL)) {
@@ -108,7 +111,8 @@ class Validator {
     const foundUrl = gaiaAddresses.find((address) => address === gaiaAddress);
 
     if (!foundUrl) {
-      return errorMessage('Username does not match provided Gaia URL');
+      this.attrs.usernameUnverified = this.attrs.username;
+      return true;
     }
 
     return true;
@@ -120,10 +124,11 @@ class Validator {
   private async fetchProfileGaiaAddresses(): Promise<string[]> {
     const uri = `https://core.blockstack.org/v1/users/${this.attrs.username}`;
     try {
-      const response = await request({
+      const options = {
         uri,
         json: true,
-      });
+      };
+      const response = await cache.request(options);
       const user = response[this.attrs.username];
       if (user && user.profile && user.profile.apps) {
         const urls: string[] = Object.values(user.profile.apps);
