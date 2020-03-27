@@ -1,15 +1,61 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import request from 'request-promise';
-import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
 import { verifyECDSA } from 'blockstack/lib/encryption/ec';
 import { Collection } from 'mongodb';
 import EventEmitter from 'wolfy87-eventemitter';
+import { stringify } from 'qs';
 
 import { Config } from '../types';
 import Validator from '../lib/validator';
 import constants from '../lib/constants';
+
+export const queryToMongo = (
+  query: { limit: number; offset: number; sort: any; criteria: any },
+  { maxLimit }: { maxLimit: number }
+) => {
+  const { limit: userLimit, offset: userOffset, sort, ...criteria } = query;
+  const limit = Number(userLimit) || maxLimit;
+  const offset = Number(userOffset) || 0;
+
+  return {
+    options: {
+      limit,
+      offset,
+      sort,
+    },
+    criteria: {
+      ...criteria,
+    },
+    links(url: string, totalCount: number) {
+      const links: {
+        prev?: string;
+        next?: string;
+        first?: string;
+        last?: string;
+        pages?: number;
+        offset?: number;
+      } = {};
+      const safeLimit = Math.min(limit, totalCount);
+
+      const getLinkWithOffset = (offsetForLink: number): string =>
+        `${url}?${stringify({ ...query, offset: offsetForLink })}`;
+
+      if (offset > 0) {
+        links.prev = getLinkWithOffset(Math.max(offset - safeLimit, 0));
+        links.first = getLinkWithOffset(0);
+      }
+      if (offset + safeLimit < totalCount) {
+        const pages = Math.ceil(totalCount / safeLimit);
+        const newOffset = (pages - 1) * safeLimit;
+        links.next = getLinkWithOffset(Math.min(offset + safeLimit, newOffset));
+        links.last = getLinkWithOffset(newOffset);
+      }
+      return links;
+    },
+  };
+};
 
 const makeModelsController = (
   radiksCollection: Collection,
