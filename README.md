@@ -79,7 +79,7 @@ In the future, Radiks-server will support various different databases, but right
    export MONGODB_URI="mongodb://admin:mongome@157.245.167.8:27017/mycoolapp"
    ```
 
-   The default port for Mongodb is `27017`, your instance may be configured differently.  By default, Radiks-server will use `'mongodb://localhost:27017/radiks-server'` as the `MONGODB_URI` value. This is suitable for local testing, but in production, you'll want to change the hostname and possible the database name.
+   The default port for Mongodb is `27017`, your instance may be configured differently.  By default, Radiks-server will use `'mongodb://localhost:27017/radiks-server'` as the `MONGODB_URI` value. This is suitable for local testing, but in production, you'll want to change the hostname and possibly the database name.
 
 6. Run `radiks-server` in the command line to start a server. 
 
