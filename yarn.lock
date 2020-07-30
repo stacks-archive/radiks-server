@@ -1576,9 +1576,12 @@ async-limiter@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/async-limiter/-/async-limiter-1.0.0.tgz#78faed8c3d074ab81f22b4e985d79e8738f720f8"
 
-async@^1.5.0:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
+async@~2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/async/-/async-2.6.3.tgz#d72625e2344a3656e3a3ad4fa749fa83299d82ff"
+  integrity sha512-zflvls11DCy+dQWzTW2dzuilv8Z5X/pjfmZOWba6TNIVDm+2UDaJmXSOXlasHKfNBs8oo3M0aT50fDEWfKZjXg==
+  dependencies:
+    lodash "^4.17.14"
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -4478,7 +4481,7 @@ lodash.unescape@4.0.1:
   resolved "https://registry.yarnpkg.com/lodash.unescape/-/lodash.unescape-4.0.1.tgz#bf2249886ce514cda112fae9218cdc065211fc9c"
   integrity sha1-vyJJiGzlFM2hEvrpIYzcBlIR/Jw=
 
-lodash@^4.13.1, lodash@^4.17.11, lodash@^4.17.13:
+lodash@^4.13.1, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
@@ -5815,11 +5818,11 @@ sax@^1.2.4:
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
 schema-inspector@^1.6.8:
-  version "1.6.8"
-  resolved "https://registry.yarnpkg.com/schema-inspector/-/schema-inspector-1.6.8.tgz#b9e53983cc55ff2dbd7b65e3dbe085d9d1285f2a"
-  integrity sha1-ueU5g8xV/y29e2Xj2+CF2dEoXyo=
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/schema-inspector/-/schema-inspector-1.7.0.tgz#b3f8b97fc26ba930ef16cd7b8fcf77201ce468db"
+  integrity sha512-Cj4XP6O3QfDhOq7bIPpz3Ev+sjR++nqFsIggBVIk/8axqFc2p+XSwNBWih9Ut/p8k36f1uCyXB+TzumZUsxVBQ==
   dependencies:
-    async "^1.5.0"
+    async "~2.6.3"
 
 semver-compare@^1.0.0:
   version "1.0.0"
