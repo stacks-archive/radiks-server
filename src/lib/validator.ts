@@ -6,11 +6,11 @@ const errorMessage = (message: string) => {
 };
 
 class Validator {
-  private db: Collection;
+  db: Collection;
 
-  private attrs: any;
+  attrs: any
 
-  private previous: any;
+  previous: any;
 
   constructor(db: Collection, attrs: any) {
     this.db = db;
@@ -22,6 +22,7 @@ class Validator {
     await this.fetchPrevious();
     await this.validateSignature();
     await this.validatePrevious();
+    await this.validateUpdatedAt();
     return true;
   }
 
@@ -77,6 +78,22 @@ class Validator {
     if (this.previous && (this.attrs.updatable === false)) {
       errorMessage('Tried to update a non-updatable model');
     }
+  }
+
+  validateUpdatedAt() {
+    if (!this.previous) {
+      return true;
+    }
+    if (typeof this.previous.updatedAt !== "number") {
+      errorMessage("This model's previous `updatedAt` is not a number");
+    }
+    if (typeof this.attrs.updatedAt !== "number") {
+      errorMessage("This model's `updatedAt` is not a number");
+    }
+    if (this.attrs.updatedAt <= this.previous.updatedAt) {
+      errorMessage("Model's `updatedAt` has not been increased");
+    }
+    return true;
   }
 
   validatePresent(key: string) {

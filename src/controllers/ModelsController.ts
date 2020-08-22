@@ -90,8 +90,18 @@ const makeModelsController = (
         _id: attrs.signingKeyId,
         radiksType: 'SigningKey',
       });
-      const message = `${attrs._id}-${attrs.updatedAt}`;
-      if (verifyECDSA(message, publicKey, req.query.signature)) {
+      const {
+        signature,
+        updatedAt,
+      }: { signature: string; updatedAt: string } = req.query;
+      if (!updatedAt || parseInt(updatedAt, 10) <= attrs.updatedAt) {
+        return res.json({
+          success: false,
+          error: 'Invalid `updatedAt` request query',
+        });
+      }
+      const message = `${attrs._id}-${updatedAt}`;
+      if (verifyECDSA(message, publicKey, signature)) {
         await radiksCollection.deleteOne({ _id: req.params.id });
         return res.json({
           success: true,

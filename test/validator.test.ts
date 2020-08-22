@@ -29,9 +29,9 @@ test('it doesnt allow mismatched signingKeyId', async () => {
     ...models.hank,
   };
   signer.sign(model);
-  await db.collection(constants.COLLECTION).insertOne(model);
   let validator = new Validator(db.collection(constants.COLLECTION), model);
   expect(await validator.validate()).toEqual(true);
+  await db.collection(constants.COLLECTION).insertOne(model);
 
   const secondSigner = new Signer();
   await secondSigner.save(db);
@@ -61,7 +61,7 @@ test('it allows changing the signing key if signed with previous signing key', a
   expect(await validator.validate()).toEqual(true);
 });
 
-test('it doesnt allow older updatedAt', async () => {
+test('it doesnt allow updating if `updatable` is false', async () => {
   const model = {
     ...models.notUpdatable,
   };
@@ -147,4 +147,21 @@ test('allows users to use personal signing key', async () => {
   signer.sign(user);
   const validator = new Validator(db.collection(constants.COLLECTION), user);
   expect(await validator.validate()).toEqual(true);
+});
+
+test('doesnt allow updating if updatedAt hasnt changed', async () => {
+  const model = {
+    ...models.hank,
+  };
+  const signer = new Signer();
+  const db = await getDB();
+  await signer.save(db);
+  signer.sign(model);
+  let validator = new Validator(db.collection(constants.COLLECTION), model);
+  expect(await validator.validate()).toBe(true);
+  await db.collection(constants.COLLECTION).insertOne(model);
+  validator = new Validator(db.collection(constants.COLLECTION), model);
+  await expect(validator.validate()).rejects.toThrow(
+    "Model's `updatedAt` has not been increased"
+  );
 });

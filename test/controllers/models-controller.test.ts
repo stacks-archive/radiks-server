@@ -1,5 +1,6 @@
 import '../setup';
 import request from 'supertest';
+import { Express } from 'express';
 import { signECDSA } from 'blockstack/lib/encryption';
 import { makeECPrivateKey } from 'blockstack/lib/keys';
 import getApp from '../test-server';
@@ -12,6 +13,7 @@ jest.mock(
   '../../src/lib/validator',
   () =>
     class FakeValidator {
+      // eslint-disable-next-line class-methods-use-this
       validate() {
         return true;
       }
@@ -44,7 +46,7 @@ test('it can save the same model twice', async () => {
   expect(response.body.success).toEqual(true);
 });
 
-const getDocs = async (app, query) => {
+const getDocs = async (app: Express, query: any) => {
   const req = request(app)
     .get('/radiks/models/find')
     .query(query);
@@ -99,13 +101,14 @@ test('it can delete a model', async () => {
   const radiksData = db.collection(constants.COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
+  signer.sign(model);
   const { signature } = signECDSA(
     signer.privateKey,
     `${model._id}-${model.updatedAt}`
   );
   const response = await request(app)
     .del(`/radiks/models/${model._id}`)
-    .query({ signature });
+    .query({ signature, updatedAt: model.updatedAt });
   expect(response.body.success).toEqual(true);
   const dbModel = await radiksData.findOne({ _id: model._id });
   expect(dbModel).toBeNull();
@@ -120,14 +123,38 @@ test('it cannot delete with an invalid signature', async () => {
   const radiksData = db.collection(constants.COLLECTION);
   await signer.save(db);
   await radiksData.insertOne(model);
+  const updatedAt = (model.updatedAt as number) + 1;
   const { signature } = signECDSA(
     makeECPrivateKey(),
+    `${model._id}-${updatedAt}`
+  );
+  const response = await request(app)
+    .del(`/radiks/models/${model._id}`)
+    .query({ signature, updatedAt });
+  expect(response.body.success).toEqual(false);
+  expect(response.body.error).toEqual('Invalid signature');
+  const dbModel = await radiksData.findOne({ _id: model._id });
+  expect(dbModel).not.toBeNull();
+});
+
+test('it cannot update with an older updatedAt', async () => {
+  const app = await getApp();
+  const model = { ...models.test1 };
+  const signer = new Signer();
+  signer.sign(model);
+  const db = await getDB();
+  const radiksData = db.collection(constants.COLLECTION);
+  await signer.save(db);
+  await radiksData.insertOne(model);
+  const { signature } = signECDSA(
+    signer.privateKey,
     `${model._id}-${model.updatedAt}`
   );
   const response = await request(app)
     .del(`/radiks/models/${model._id}`)
-    .query({ signature });
+    .query({ signature, updatedAt: model.updatedAt });
   expect(response.body.success).toEqual(false);
+  expect(response.body.error).toEqual('Invalid `updatedAt` request query');
   const dbModel = await radiksData.findOne({ _id: model._id });
   expect(dbModel).not.toBeNull();
 });

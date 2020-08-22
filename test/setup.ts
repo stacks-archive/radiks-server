@@ -7,7 +7,11 @@ dotenv.config({
   path: path.resolve(process.cwd(), '.env.test'),
 });
 
-jest.mock('request-promise', () => options => {
+interface RequestPromiseArgs {
+  uri: string;
+}
+
+jest.mock('request-promise', () => (options: RequestPromiseArgs) => {
   const { models } = require('./mocks'); // eslint-disable-line
   const { uri } = options;
   return Promise.resolve(models[uri]);
