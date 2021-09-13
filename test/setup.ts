@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import getDB from './db';
 import constants from '../src/lib/constants';
+import { getClient } from '../src/database/mongodb';
 
 dotenv.config({
   path: path.resolve(process.cwd(), '.env.test'),
@@ -22,4 +23,9 @@ beforeEach(async done => {
     // console.error(error);
   }
   done();
+});
+
+afterAll(async () => {
+  const client = await getClient();
+  await client.close();
 });
