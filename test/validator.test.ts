@@ -1,10 +1,10 @@
-import { getPublicKeyFromPrivate } from 'blockstack/lib/keys';
 import './setup';
 import { models } from './mocks';
 import getDB from './db';
 import Signer from './signer';
 import constants from '../src/lib/constants';
 import Validator from '../src/lib/validator';
+import { getPublicKeyFromPrivate } from '@stacks/encryption';
 
 test('it validates new models', async () => {
   const signer = new Signer();

@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { verifyECDSA } from 'blockstack/lib/encryption';
+import { verifyECDSA } from '@stacks/encryption';
 import { addAsync } from '@awaitjs/express';
 import { Collection } from 'mongodb';
 

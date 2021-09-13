@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import request from 'request-promise';
 import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
-import { verifyECDSA } from 'blockstack/lib/encryption/ec';
+import { verifyECDSA } from '@stacks/encryption';
 import { Collection } from 'mongodb';
 import EventEmitter from 'wolfy87-eventemitter';
 

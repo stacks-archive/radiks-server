@@ -1,5 +1,8 @@
-import { makeECPrivateKey, getPublicKeyFromPrivate } from 'blockstack/lib/keys';
-import { signECDSA } from 'blockstack/lib/encryption';
+import {
+  getPublicKeyFromPrivate,
+  makeECPrivateKey,
+  signECDSA,
+} from '@stacks/encryption';
 import uuid from 'uuid/v4';
 import constants from '../src/lib/constants';
 

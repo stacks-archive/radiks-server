@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@awaitjs/express": "^0.3.0",
-    "blockstack": "^19.2.2",
+    "@stacks/encryption": "^2.0.1",
     "body-parser": "^1.19.0",
     "elliptic": "^6.5.4",
     "express": "^4.17.1",
