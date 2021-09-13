@@ -1,10 +1,10 @@
-import { getPublicKeyFromPrivate } from 'blockstack/lib/keys';
 import './setup';
 import { models } from './mocks';
 import getDB from './db';
 import Signer from './signer';
 import constants from '../src/lib/constants';
 import Validator from '../src/lib/validator';
+import { getPublicKeyFromPrivate } from '@stacks/encryption';
 
 test('it validates new models', async () => {
   const signer = new Signer();
@@ -126,7 +126,11 @@ test('allows signing with new key if it matches the user group key', async () =>
   const newSigner = new Signer();
   group.signingKeyId = newSigner._id;
   newSigner.sign(group);
-  await db.collection(constants.COLLECTION).save(group);
+  
+  const filter = {_id: group._id };
+  const options = { upsert: true };
+
+  await db.collection(constants.COLLECTION).updateOne(filter, { $set: group }, options); // TODO
   model.signingKeyId = newSigner._id;
   newSigner.sign(model);
   await newSigner.save(db);

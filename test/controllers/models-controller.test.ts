@@ -1,7 +1,6 @@
 import '../setup';
 import request from 'supertest';
-import { signECDSA } from 'blockstack/lib/encryption';
-import { makeECPrivateKey } from 'blockstack/lib/keys';
+import { makeECPrivateKey, signECDSA } from '@stacks/encryption';
 import getApp from '../test-server';
 import { models, saveAll } from '../mocks';
 import Signer from '../signer';

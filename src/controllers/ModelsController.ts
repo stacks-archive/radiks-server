@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import request from 'request-promise';
 import queryToMongo from 'query-to-mongo';
 import { addAsync } from '@awaitjs/express';
-import { verifyECDSA } from 'blockstack/lib/encryption/ec';
+import { verifyECDSA } from '@stacks/encryption';
 import { Collection } from 'mongodb';
 import EventEmitter from 'wolfy87-eventemitter';
 
@@ -28,7 +28,10 @@ const makeModelsController = (
     const validator = new Validator(radiksCollection, attrs);
     try {
       await validator.validate();
-      await radiksCollection.save(attrs);
+      const filter = {_id: attrs._id };
+      const options = { upsert: true };
+      radiksCollection.updateMany(filter, {$set: attrs}, options)
+
       emitter.emit(constants.STREAM_CRAWL_EVENT, [attrs]);
 
       res.json({
@@ -50,7 +53,7 @@ const makeModelsController = (
 
     const cursor = radiksCollection.find(mongo.criteria, mongo.options);
     const results = await cursor.toArray();
-    const total = await cursor.count();
+    const total = await radiksCollection.countDocuments();
 
     const fullUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`;
     const pageLinks = mongo.links(fullUrl.split('?')[0], total);

@@ -1,5 +1,5 @@
+import { verifyECDSA } from '@stacks/encryption';
 import { Collection } from 'mongodb';
-import { verifyECDSA } from 'blockstack/lib/encryption';
 
 const errorMessage = (message: string) => {
   throw new Error(`Error when validating: ${message}`);

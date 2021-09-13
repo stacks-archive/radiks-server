@@ -1,6 +1,9 @@
-import { makeECPrivateKey, getPublicKeyFromPrivate } from 'blockstack/lib/keys';
-import { signECDSA } from 'blockstack/lib/encryption';
-import uuid from 'uuid/v4';
+import {
+  getPublicKeyFromPrivate,
+  makeECPrivateKey,
+  signECDSA,
+} from '@stacks/encryption';
+import { v4 as uuid } from 'uuid';
 import constants from '../src/lib/constants';
 
 export default class Signer {
