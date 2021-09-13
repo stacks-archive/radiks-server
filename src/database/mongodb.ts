@@ -7,17 +7,9 @@ export const getClient = async (url?: string) => {
     url || process.env.MONGODB_URI || 'mongodb://localhost:27017/radiks-server';
 
   if (!client) {
-    client = new MongoClient(_url, {
-      useNewUrlParser: true,
-      reconnectTries: Number.MAX_VALUE,
-      reconnectInterval: 1000, // every 1 second
-    });
-  }
-
-  if (!client.isConnected()) {
+    client = new MongoClient(_url);
     await client.connect();
   }
-
   return client;
 };
 

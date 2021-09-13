@@ -14,7 +14,7 @@ jest.mock('request-promise', () => options => {
   return Promise.resolve(models[uri]);
 });
 
-beforeEach(async done => {
+beforeEach(async () => {
   const db = await getDB();
   try {
     await db.collection(constants.COLLECTION).drop();
@@ -22,7 +22,6 @@ beforeEach(async done => {
     // collection doesn't exist
     // console.error(error);
   }
-  done();
 });
 
 afterAll(async () => {

@@ -3,7 +3,7 @@ import {
   makeECPrivateKey,
   signECDSA,
 } from '@stacks/encryption';
-import uuid from 'uuid/v4';
+import { v4 as uuid } from 'uuid';
 import constants from '../src/lib/constants';
 
 export default class Signer {

@@ -126,7 +126,11 @@ test('allows signing with new key if it matches the user group key', async () =>
   const newSigner = new Signer();
   group.signingKeyId = newSigner._id;
   newSigner.sign(group);
-  await db.collection(constants.COLLECTION).save(group);
+  
+  const filter = {_id: group._id };
+  const options = { upsert: true };
+
+  await db.collection(constants.COLLECTION).updateOne(filter, { $set: group }, options); // TODO
   model.signingKeyId = newSigner._id;
   newSigner.sign(model);
   await newSigner.save(db);
